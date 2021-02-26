@@ -44,7 +44,7 @@ declare namespace overwolf {
 
 declare namespace overwolf.io {
   namespace enums {
-    const enum eEncoding {
+    enum eEncoding {
       UTF8 = "UTF8",
       UTF8BOM = "UTF8BOM",
       Unicode = "Unicode",
@@ -125,7 +125,7 @@ declare namespace overwolf.io {
     position: number;
     totalLines: number;
   }
-  
+
 
   /**
    * Checks for the existence of the file in the given path.
@@ -249,7 +249,7 @@ declare namespace overwolf.io {
    */
   function stopFileListener(id: string): void;
 }
-  
+
 declare namespace overwolf.cryptography {
   interface EncryptedDataResult extends Result {
     ciphertext: string;
@@ -285,16 +285,16 @@ declare namespace overwolf.media {
     /**
      * Media type for the Media Event.
      */
-    const enum eMediaType {
+    enum eMediaType {
       Video = "Video",
       Image = "Image",
     }
 
-    const enum eSourceType {
+    enum eSourceType {
       Webcam = "Webcam"
     }
 
-    const enum eVideoSourceTransform {
+    enum eVideoSourceTransform {
       Stretch = "Stretch"
     }
   }
@@ -635,7 +635,7 @@ declare namespace overwolf.media.audio {
 
 declare namespace overwolf.media.videos {
   namespace enums {
-    const enum WatermarkLocation {
+    enum WatermarkLocation {
       TopLeft = "topLeft",
       topCenter = "topCenter",
       topRight = "topRight",
@@ -657,7 +657,7 @@ declare namespace overwolf.media.videos {
    * @param startTime Segment start time (in milliseconds)
    * @param endTime Segment end time (in milliseconds)
    * @param location The location of the watermark (in pixles)
-   * 
+   *
    */
   interface WatermarkParams {
     startTime: number;
@@ -751,8 +751,8 @@ declare namespace overwolf.media.videos {
   /**
    * Adds a video/image watermark to a video.
    * @param sourceVideoUrl The url of the source video in an overwolf://media form.
-   * @param watermarkUrl The url of the watermark video/image in an overwolf://media form. 
-   * @param watermarkParams Use this object to mark the watermark   
+   * @param watermarkUrl The url of the watermark video/image in an overwolf://media form.
+   * @param watermarkParams Use this object to mark the watermark
    * @param callback A callback function which will be called with the status of
    * the request and the url to the output video.
    */
@@ -767,7 +767,7 @@ declare namespace overwolf.media.videos {
 
 declare namespace overwolf.media.replays {
   namespace enums {
-    const enum ReplayType {
+    enum ReplayType {
       Video = "Video",
       Gif = "Gif",
     }
@@ -1080,7 +1080,7 @@ declare namespace overwolf.media.replays {
 }
 
 declare namespace overwolf.profile {
-  const enum ConnectionState {
+  enum ConnectionState {
     Unknown = "Unknown",
     Offline = "Offline",
     Connecting = "Connecting",
@@ -1125,7 +1125,7 @@ declare namespace overwolf.profile {
 }
 
 declare namespace overwolf.profile.subscriptions {
-  const enum eState {
+  enum eState {
     Active = 0,
     Cancelled = 1,
     Revoked = 2,
@@ -1175,11 +1175,11 @@ declare namespace overwolf.profile.subscriptions {
 
 declare namespace overwolf.windows {
   namespace enums {
-    const enum WindowStyle {
+    enum WindowStyle {
       InputPassThrough = "InputPassThrough",
     }
 
-    const enum WindowDragEdge {
+    enum WindowDragEdge {
       None = "None",
       Left = "Left",
       Right = "Right",
@@ -1191,20 +1191,20 @@ declare namespace overwolf.windows {
       BottomRight = "BottomRight",
     }
 
-    const enum MessagePromptIcon {
+    enum MessagePromptIcon {
       None = "None",
       QuestionMark = "QuestionMark",
       ExclamationMark = "ExclamationMark",
     }
 
-    const enum FlashBehavior {
+    enum FlashBehavior {
       automatic = "automatic",
       on = "on",
       off = "off",
     }
   }
 
-  const enum WindowStateEx {
+  enum WindowStateEx {
     CLOSED = "closed",
     MINIMIZED = "minimized",
     HIDDEN = "hidden",
@@ -2146,7 +2146,7 @@ declare namespace overwolf.benchmarking {
 }
 
 declare namespace overwolf.games {
-  const enum GameInfoType {
+  enum GameInfoType {
     Game = 0,
     Launcher = 1,
   }
@@ -2821,7 +2821,7 @@ declare namespace overwolf.games.inputTracking {
 
 declare namespace overwolf.web {
   namespace enums {
-    const enum HttpRequestMethods {
+    enum HttpRequestMethods {
       GET = "GET",
       HEAD = "HEAD",
       POST = "POST",
@@ -2829,7 +2829,7 @@ declare namespace overwolf.web {
       DELETE = "DELETE",
       PATCH = "PATCH",
     }
-    const enum MessageType {
+    enum MessageType {
       Ping = "ping",
       Binary = "binary",
       Text = "text"
@@ -3008,7 +3008,7 @@ declare namespace overwolf.logitech {
 
 declare namespace overwolf.logitech.led {
   namespace enums {
-    const enum KeyboardNames {
+    enum KeyboardNames {
       ESC = "ESC",
       F1 = "F1",
       F2 = "F2",
@@ -3115,7 +3115,7 @@ declare namespace overwolf.logitech.led {
       NUM_PERIOD = "NUM_PERIOD",
     }
 
-    const enum LogitechDeviceLightingType {
+    enum LogitechDeviceLightingType {
       Mono = "Mono",
       RGB = "RGB",
       PerkeyRGB = "PerkeyRGB",
@@ -3383,45 +3383,45 @@ declare namespace overwolf.logitech.led {
 
 declare namespace overwolf.streaming {
   namespace enums {
-    const enum StreamMouseCursor {
+    enum StreamMouseCursor {
       both = "both",
       gameOnly = "gameOnly",
       desktopOnly = "desktopOnly",
     }
 
-    const enum ObsStreamingMode {
+    enum ObsStreamingMode {
       OBSNoAwareness = "OBSNoAwareness",
       OBSAwareness = "OBSAwareness",
       OBSAwarenessHideFromDeskTop = "OBSAwarenessHideFromDeskTop",
     }
 
-    const enum StreamingProvider {
+    enum StreamingProvider {
       Unknown = "Unknown",
       Twitch = "Twitch",
       VideoRecorder = "VideoRecorder",
       RTMP = "RTMP",
     }
 
-    const enum StreamingMode {
+    enum StreamingMode {
       WhenVisible = "WhenVisible",
       Always = "Always",
       Never = "Never",
     }
 
-    const enum StreamEncoder {
+    enum StreamEncoder {
       INTEL = "INTEL",
       X264 = "X264",
       NVIDIA_NVENC = "NVIDIA_NVENC",
       AMD_AMF = "AMD_AMF",
     }
 
-    const enum StreamEncoderPreset_Intel {
+    enum StreamEncoderPreset_Intel {
       LOW = "LOW",
       MEDIUM = "MEDIUM",
       HIGH = "HIGH",
     }
 
-    const enum StreamEncoderPreset_x264 {
+    enum StreamEncoderPreset_x264 {
       ULTRAFAST = "ULTRAFAST",
       SUPERFAST = "SUPERFAST",
       VERYFAST = "VERYFAST",
@@ -3434,7 +3434,7 @@ declare namespace overwolf.streaming {
       PLACEBO = "PLACEBO",
     }
 
-    const enum StreamEncoderPreset_AMD_AMF {
+    enum StreamEncoderPreset_AMD_AMF {
       AUTOMATIC = "AUTOMATIC",
       BALANCED = "BALANCED",
       SPEED = "SPEED",
@@ -3443,14 +3443,14 @@ declare namespace overwolf.streaming {
       LOW_LATENCY = "LOW_LATENCY",
     }
 
-    const enum StreamEncoderRateControl_AMD_AMF {
+    enum StreamEncoderRateControl_AMD_AMF {
       RC_CBR = "RC_CBR",
       RC_CQP = "RC_CQP",
       RC_VBR = "RC_VBR",
       RC_VBR_MINQP = "RC_VBR_MINQP",
     }
 
-    const enum StreamEncoderPreset_NVIDIA {
+    enum StreamEncoderPreset_NVIDIA {
       AUTOMATIC = "AUTOMATIC",
       DEFAULT = "DEFAULT",
       HIGH_QUALITY = "HIGH_QUALITY",
@@ -3463,7 +3463,7 @@ declare namespace overwolf.streaming {
       HIGH_PERFORMANCE_LOSSLESS = "HIGH_PERFORMANCE_LOSSLESS",
     }
 
-    const enum StreamEncoderRateControl_NVIDIA {
+    enum StreamEncoderRateControl_NVIDIA {
       RC_CBR = "RC_CBR",
       RC_CQP = "RC_CQP",
       RC_VBR = "RC_VBR",
@@ -3471,13 +3471,13 @@ declare namespace overwolf.streaming {
       RC_2_PASS_QUALITY = "RC_2_PASS_QUALITY",
     }
 
-    const enum eTobiiEffectType {
+    enum eTobiiEffectType {
       Default = "Default",
       Bubble = "Bubble",
       Solid = "Solid",
       Inverted = "Inverted",
     }
-    const enum StreamEncoderRateControl_x264 {
+    enum StreamEncoderRateControl_x264 {
       RC_CBR = "RC_CBR",
       RC_CQP = "RC_CQP",
       RC_VBR = "RC_VBR",
@@ -3485,7 +3485,7 @@ declare namespace overwolf.streaming {
       RC_2_PASS_QUALITY = "RC_2_PASS_QUALITY",
     }
 
-    const enum IndicationPosition {
+    enum IndicationPosition {
       None = "None",
       TopLeftCorner = "TopLeftCorner",
       TopRightCorner = "TopRightCorner",
@@ -3493,7 +3493,7 @@ declare namespace overwolf.streaming {
       BottomRightCorner = "BottomRightCorner",
     }
 
-    const enum IndicationType {
+    enum IndicationType {
       NoIndication = "NoIndication",
       Dot = "Dot",
       DotAndTimer = "DotAndTimer",
@@ -4248,7 +4248,7 @@ declare namespace overwolf.extensions {
     | "OwWebview"
     | "VideoCaptureSettings";
 
-  const enum ExtensionType {
+  enum ExtensionType {
     WebApp = "WebApp",
     BuiltIn = "BuiltIn",
     TCApp = "TCApp",
@@ -4260,7 +4260,7 @@ declare namespace overwolf.extensions {
     Unknown = "Unknown",
   }
 
-  const enum ExtensionUpdateState {
+  enum ExtensionUpdateState {
     UpToDate = "UpToDate",
     UpdateAvailable = "UpdateAvailable",
     PendingRestart = "PendingRestart",
@@ -4979,7 +4979,7 @@ declare namespace overwolf.extensions {
 }
 
 declare namespace overwolf.extensions.io {
-  const enum StorageSpace {
+  enum StorageSpace {
     pictures = "pictures",
     videos = "videos",
     appData = "appData",
@@ -5013,7 +5013,7 @@ declare namespace overwolf.extensions.current {
     object?: any;
   }
 
-  
+
   /**
    * Retrieves an extra object (providing external APIs) registered in the
    * extension's manifest.
@@ -5284,7 +5284,7 @@ declare namespace overwolf.campaigns.crossapp {
 
 declare namespace overwolf.utils {
   namespace enums {
-    const enum eStorePage {
+    enum eStorePage {
       LoginPage = "LoginPage",
       OneAppPage = "OneAppPage",
       SubscriptionPage = "SubscriptionPage",
@@ -5565,14 +5565,14 @@ declare namespace overwolf.utils {
 
 declare namespace overwolf.settings {
   namespace enums {
-    const enum ResolutionSettings {
+    enum ResolutionSettings {
       Original = "Original",
       R1080p = "R1080p",
       R720p = "R720p",
       R480p = "R480p",
     }
 
-    const enum eIndicationPosition {
+    enum eIndicationPosition {
       None = -1,
       TopLeftCorner = 0,
       TopRightCorner = 1,
@@ -5914,13 +5914,13 @@ declare namespace overwolf.settings.hotkeys {
     description: string;
     binding: string;
   }
-  
+
   interface HotkeyModifiers {
     ctrl?: boolean;
     alt?: boolean;
     shift?: boolean;
   }
-  
+
   interface UnassignHotkeyObject {
     name: string;
     gameId?: number;
@@ -5935,7 +5935,7 @@ declare namespace overwolf.settings.hotkeys {
    * Returns the hotkey assigned for the current extension in all the games.
    */
   function get(callback: CallbackFunction<GetAssignedHotkeyResult>): void;
-    
+
    /**
    * Set hotkey for current extension
    */
@@ -5943,7 +5943,7 @@ declare namespace overwolf.settings.hotkeys {
     hotkey: AssignHotkeyObject,
     callback: CallbackFunction<Result>
   ): void;
-  
+
    /**
    * unassign hotkey for current extension
    */
@@ -6000,7 +6000,7 @@ declare namespace overwolf.social {
   }
 
   interface GetDisabledServicesResult<T> extends Result {
-    disabled_services?: string[];   
+    disabled_services?: string[];
   }
 
   /**
@@ -6013,7 +6013,7 @@ declare namespace overwolf.social {
 }
 
 declare namespace overwolf.social.discord {
-  const enum PostPermission {
+  enum PostPermission {
     None = 0,
     Text,
     File,
@@ -6278,7 +6278,7 @@ declare namespace overwolf.social.twitter {
 }
 
 declare namespace overwolf.social.youtube {
-  const enum Privacy {
+  enum Privacy {
     Public = "Public",
     Unlisted = "Unlisted",
     Private = "Private",
@@ -6354,7 +6354,7 @@ declare namespace overwolf.social.youtube {
 }
 
 declare namespace overwolf.social.reddit {
-  
+
   interface Flair {
     id: string;
     text: string;
