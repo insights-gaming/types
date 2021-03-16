@@ -3413,6 +3413,7 @@ declare namespace overwolf.streaming {
       X264 = "X264",
       NVIDIA_NVENC = "NVIDIA_NVENC",
       AMD_AMF = "AMD_AMF",
+      NVIDIA_NVENC_NEW = "NVIDIA_NVENC_NEW",
     }
 
     enum StreamEncoderPreset_Intel {
