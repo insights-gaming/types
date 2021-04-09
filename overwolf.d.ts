@@ -4980,28 +4980,31 @@ declare namespace overwolf.extensions {
 }
 
 declare namespace overwolf.extensions.io {
-  enum StorageSpace {
-    pictures = "pictures",
-    videos = "videos",
-    appData = "appData",
+  namespace enums {
+    enum StorageSpace {
+      pictures = "pictures",
+      videos = "videos",
+      appData = "appData",
+    }
   }
+
   interface GetStoragePathResult extends Result {
     path: string;
   }
 
   function getStoragePath(
-    space: StorageSpace,
+    space: enums.StorageSpace,
     callback: CallbackFunction<GetStoragePathResult>
   ): void;
 
   function readTextFile(
-    space: StorageSpace,
+    space: enums.StorageSpace,
     filePath: string,
     callback: CallbackFunction<overwolf.io.ReadFileContentsResult>
   ): void;
 
   function writeTextFile(
-    space: StorageSpace,
+    space: enums.StorageSpace,
     filePath: string,
     content: string,
     callback: CallbackFunction<Result>
