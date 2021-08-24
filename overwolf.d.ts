@@ -1160,9 +1160,9 @@ declare namespace overwolf.notifications  {
   /**
    * Fired when a user tapped on the body of a toast notification or performed an action inside a toast notification.
    */
-   const onToastNotification: Event<ToastNotificationEvent>;
+  const onToastNotification: Event<ToastNotificationEvent>;
 
-   /**
+  /**
    * Show Windows toast notification.
    * @param args  Toast notification params
    * @param callback A function called with the current user, or an error.
@@ -1240,7 +1240,7 @@ declare namespace overwolf.profile.subscriptions.inapp {
    * @param theme Optional. "Dark" or "Light. If not defined, the default is light.
    * @param callback A callback function which will be called with the status of the request.
    */
-   function show(
+  function show(
     planId: number,
     theme: string,
     callback: CallbackFunction<Result>
@@ -6245,7 +6245,7 @@ declare namespace overwolf.settings.games {
    * @param enabled whether auto-launch should be enabled
    * @param callback
    */
-   function setAutoLaunchEnabled(
+  function setAutoLaunchEnabled(
     gameClassId: number,
     enabled: boolean,
     callback: CallbackFunction<AutolaunchEnabledResult>
@@ -6317,7 +6317,7 @@ declare namespace overwolf.settings.hotkeys {
    */
   function get(callback: CallbackFunction<GetAssignedHotkeyResult>): void;
 
-   /**
+  /**
    * Set hotkey for current extension
    */
   function assign(
@@ -6325,13 +6325,13 @@ declare namespace overwolf.settings.hotkeys {
     callback: CallbackFunction<Result>
   ): void;
 
-   /**
+  /**
    * unassign hotkey for current extension
    */
-   function unassign(
-      hotkey: UnassignHotkeyObject,
-      callback: CallbackFunction<Result>
-   ): void;
+  function unassign(
+    hotkey: UnassignHotkeyObject,
+    callback: CallbackFunction<Result>
+  ): void;
 
   /**
    * Fired only for hotkeys that are set in the manifest as hold.
@@ -6388,7 +6388,7 @@ declare namespace overwolf.social {
    * Checks which of the supported sharing services are disabled or enabled.
    * @param callback Returns a list of disabled services
    */
-   function getDisabledServices(callback: CallbackFunction<GetDisabledServicesResult<void>>): void;
+  function getDisabledServices(callback: CallbackFunction<GetDisabledServicesResult<void>>): void;
 
 
 }
