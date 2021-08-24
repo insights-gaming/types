@@ -1088,19 +1088,19 @@ declare namespace overwolf.media.replays {
 
 declare namespace overwolf.notifications  {
   namespace enums {
-    const enum AppLogoCrop {
+    enum AppLogoCrop {
       Default = "Default",
       None = "None",
       Circle = "Circle",
     }
 
-    const enum ToatsEventType {
+    enum ToatsEventType {
       Dismiss = "dismiss",
       ButtonClick = "buttonClick",
       Error = "error",
     }
 
-    const enum ToastEventError {
+    enum ToastEventError {
       Unknown = "unknown",
       NotificationsDisabled = "notificationsDisabled ",
       Error = "error"
@@ -1230,7 +1230,7 @@ declare namespace overwolf.profile {
 }
 
 declare namespace overwolf.profile.subscriptions.inapp {
-  const enum Theme {
+  enum Theme {
     Light = "Light",
     Dark = "Dark",
   }
@@ -2318,7 +2318,7 @@ declare namespace overwolf.games {
     Launcher = 1,
   }
 
-  const enum GameInfoChangeReason {
+  enum GameInfoChangeReason {
     Game = "game",
     GameChanged = "gameChanged",
     GameFocusChanged = "gameFocusChanged",
@@ -2333,7 +2333,7 @@ declare namespace overwolf.games {
     GameWindowDataChanged = "gameWindowDataChanged",
   }
 
-  const enum KnownOverlayCoexistenceApps {
+  enum KnownOverlayCoexistenceApps {
     Asus = "asus",
     Discord = "discord",
     MSIAfterBurner = "MSIAfterBurner",
@@ -3715,12 +3715,12 @@ declare namespace overwolf.streaming {
       DotAndTimer = "DotAndTimer",
     }
 
-    const enum eVideoBaseFrameSizeSource {
+    enum eVideoBaseFrameSizeSource {
       Auto = "Auto",
       Setting = "Setting",
     }
 
-    const enum eVideoFrameSizeCalcMethod {
+    enum eVideoFrameSizeCalcMethod {
       Original = "Original",
       ExactOrKeepRatio = "ExactOrKeepRatio",
       ExactOrClosestResolution = "ExactOrClosestResolution",
@@ -5287,7 +5287,7 @@ declare namespace overwolf.extensions.io {
       appData = "appData",
     }
 
-    const enum FileType {
+    enum FileType {
       file = "file",
       directory = "directory"
     }
