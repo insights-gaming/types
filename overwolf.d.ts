@@ -72,6 +72,9 @@ declare namespace overwolf.io {
     const fonts: string;
     const startMenu: string;
     const localAppData: string;
+    const overwolfInstallation: string;
+    const overwolfInstallationWithVersion: string;
+    const obsBin: string;
   }
 
   interface ReadFileOptions {
@@ -102,7 +105,7 @@ declare namespace overwolf.io {
 
   interface FileInDir {
     name: string;
-    type: string;
+    type: 'dir' | 'file';
   }
 
   interface ReadBinaryFileResult extends Result {
@@ -280,7 +283,7 @@ declare namespace overwolf.cryptography {
   ): void;
 }
 
-declare namespace overwolf.media {
+declare namespace  overwolf.media {
   namespace enums {
     /**
      * Media type for the Media Event.
@@ -636,15 +639,15 @@ declare namespace overwolf.media.audio {
 declare namespace overwolf.media.videos {
   namespace enums {
     enum WatermarkLocation {
-      TopLeft = "topLeft",
-      topCenter = "topCenter",
-      topRight = "topRight",
-      midLeft = "midLeft",
-      center = "center",
-      midRight = "midRight",
-      bottomLeft = "bottomLeft",
-      bottomCenter = "bottomCenter",
-      bottomRight = "bottomRight"
+        BottomCenter = "BottomCenter",
+        BottomLeft = "BottomLeft",
+        BottomRight = "BottomRight",
+        Center = "Center",
+        MidLeft = "MidLeft",
+        MidRight = "MidRight",
+        TopCenter = "TopCenter",
+        TopLeft = "TopLeft",
+        TopRight = "TopRight",
     }
   }
   interface VideoCompositionSegment {
@@ -656,14 +659,15 @@ declare namespace overwolf.media.videos {
    * A helper structure to describe watermark parameters.
    * @param startTime Segment start time (in milliseconds)
    * @param endTime Segment end time (in milliseconds)
-   * @param location The location of the watermark (in pixles)
+   * @param location The location of the watermark
+   * @param scaleHeight The height of the watermark image (in pixel)
    *
    */
   interface WatermarkParams {
-    startTime: number;
-    endTime: number;
-    location: enums.WatermarkLocation;
-    scaleHeight: number;
+    startTime?: number;
+    endTime?: number;
+    location?: enums.WatermarkLocation;
+    scaleHeight?: number;
   }
 
   interface GetVideosResult extends Result {
@@ -780,7 +784,7 @@ declare namespace overwolf.media.replays {
     /**
      * Auto highlights configuration.
      */
-    highlights: ReplayHighlightsSetting;
+    highlights?: ReplayHighlightsSetting;
   }
 
   /**
@@ -853,6 +857,7 @@ declare namespace overwolf.media.replays {
 
   interface ReplayServicesStartedEvent {
     extensions: string[];
+    is_game_window_capture?: boolean;
   }
 
   interface HighlightsCapturedEvent {
@@ -860,15 +865,17 @@ declare namespace overwolf.media.replays {
     match_id: string;
     match_internal_id: string;
     session_id: string;
-    session_start_time: string;
-    match_start_time: string;
-    start_time: string;
-    duration: string;
+    session_start_time: number;
+    match_start_time: number;
+    start_time: number;
+    duration: number;
     events: string[];
     raw_events: raw_events[];
     media_url: string;
+    media_path: string;
     media_path_encoded: string;
     thumbnail_url: string;
+    thumbnail_path: string;
     thumbnail_encoded_path: string;
     replay_video_start_time: number;
   }
@@ -1079,6 +1086,94 @@ declare namespace overwolf.media.replays {
   const onHighlightsCaptured: Event<HighlightsCapturedEvent>;
 }
 
+declare namespace overwolf.notifications  {
+  namespace enums {
+    const enum AppLogoCrop {
+      Default = "Default",
+      None = "None",
+      Circle = "Circle",
+    }
+
+    const enum ToatsEventType {
+      Dismiss = "dismiss",
+      ButtonClick = "buttonClick",
+      Error = "error",
+    }
+
+    const enum ToastEventError {
+      Unknown = "unknown",
+      NotificationsDisabled = "notificationsDisabled ",
+      Error = "error"
+    }
+  }
+
+  interface ToastNotificationParams {
+    header: string;
+    /**
+     * Mandatory. Must include 1-3 texts (lines).
+     */
+    texts: string[];
+    /**
+     * By default, your toast will display your app's logo. However, you can override this logo with your own image.
+     */
+    logoOverride: LogoOverride;
+    /**
+     * Toasts can display a hero image, which is displayed prominently within the toast banner and while inside Action Center. Image dimensions must be 364x180 pixels.
+     */
+    heroImage: string;
+    /**
+     * You can provide a full-width inline-image that appears when you expand the toast.
+     */
+    inlineImage: string;
+    /**
+     * If you need to reference the source of your content, you can use attribution text. This text is always displayed at the bottom of your notification, along with your app's identity or the notification's timestamp.
+     */
+    attribution:string;
+    /**
+     * Buttons make your toast interactive, letting the user take quick actions on your toast notification without interrupting their current workflow. Buttons appear in the expanded portion of your notification.
+     */
+    buttons:ToastNotificationButton[];
+  }
+
+  interface LogoOverride {
+    url:string;
+    cropType: enums.AppLogoCrop;
+  }
+
+  interface ToastNotificationButton{
+    id: string;
+    text:string;
+  }
+
+  interface ShowToastNotificationResult extends Result {
+    id: string;
+  }
+
+  interface ToastNotificationEvent {
+    id: string;
+    eventType: enums.ToatsEventType;
+    buttonID:string;
+    error: string;
+    errorCode: enums.ToastEventError;
+  }
+
+  /**
+   * Fired when a user tapped on the body of a toast notification or performed an action inside a toast notification.
+   */
+   const onToastNotification: Event<ToastNotificationEvent>;
+
+   /**
+   * Show Windows toast notification.
+   * @param args  Toast notification params
+   * @param callback A function called with the current user, or an error.
+   */
+  function showToastNotification(
+    args: ToastNotificationParams,
+    callback: CallbackFunction<ShowToastNotificationResult>
+  ): void;
+
+}
+
 declare namespace overwolf.profile {
   enum ConnectionState {
     Unknown = "Unknown",
@@ -1097,6 +1192,8 @@ declare namespace overwolf.profile {
     username?: string;
     parameters?: Dictionary<string>;
     installParams?: any;
+    installerExtension?: any;
+    displayName?: string;
   }
 
   interface LoginStateChangedEvent {
@@ -1119,16 +1216,63 @@ declare namespace overwolf.profile {
   function openLoginDialog(): void;
 
   /**
+   * Fetches user profile from server, then invokes the callback with the currently logged-in Overwolf user.
+   * @param callback A function called with the current user, or an error.
+   */
+  function refreshUserProfile(
+    callback: CallbackFunction<GetCurrentUserResult>
+  ): void;
+
+  /**
    * Fired when a user logged in or logged out.
    */
   const onLoginStateChanged: Event<LoginStateChangedEvent>;
 }
 
+declare namespace overwolf.profile.subscriptions.inapp {
+  const enum Theme {
+    Light = "Light",
+    Dark = "Dark",
+  }
+  /**
+   * Shows the in-app subscription page as a modal window on top of the current window.
+   * @param planId  The plan Id to display.
+   * @param theme Optional. "Dark" or "Light. If not defined, the default is light.
+   * @param callback A callback function which will be called with the status of the request.
+   */
+   function show(
+    planId: number,
+    theme: string,
+    callback: CallbackFunction<Result>
+  ): void;
+
+  /**
+   * Hide the current active in-app subscription modal window.
+   * @param callback A callback function which will be called with the status of the request.
+   */
+   function hide(
+    callback: CallbackFunction<Result>
+  ): void;
+
+  /**
+   * Fired when a subscription in-app modal window is opened.
+   */
+   const onInAppSubModalOpened: Event<any>;
+
+   /**
+   * Fired when a subscription in-app modal window is closed.
+   */
+    const onInAppSubModalClosed: Event<any>;
+
+}
+
 declare namespace overwolf.profile.subscriptions {
-  enum eState {
-    Active = 0,
-    Cancelled = 1,
-    Revoked = 2,
+  namespace enums {
+    enum SubscriptionState {
+    Active = "active",
+    Cancelled = "cancelled",
+    Revoked = "revoked",
+    }
   }
 
   interface Info {
@@ -1146,7 +1290,7 @@ declare namespace overwolf.profile.subscriptions {
     muid: string;
     exp: number;
     grc: number;
-    state: eState;
+    state: overwolf.profile.subscriptions.enums.SubscriptionState;
     planInfo: Info;
     expired: boolean;
   }
@@ -1155,9 +1299,24 @@ declare namespace overwolf.profile.subscriptions {
     plans?: number[];
   }
 
+  interface GetDetailedActivePlansResult extends Result {
+    plans?: Plan[];
+  }
+
+  interface Plan {
+    planId: number;
+    state: overwolf.profile.subscriptions.enums.SubscriptionState;
+    expiryDate: number;
+    title: string;
+    description: string;
+    price: number;
+    periodMonths: number;
+  }
+
   interface SubscriptionChangedEvent {
     plans?: number[];
   }
+
 
   /**
    * Returns active subscriptions for the calling extension via callback.
@@ -1165,6 +1324,14 @@ declare namespace overwolf.profile.subscriptions {
    */
   function getActivePlans(
     callback: CallbackFunction<GetActivePlansResult>
+  ): void;
+
+  /**
+   * Returns more details about all the active subscriptions for the calling extension via callback.
+   * @param callback Returns an array of active plans, or an error.
+   */
+   function getDetailedActivePlans(
+    callback: CallbackFunction<GetDetailedActivePlansResult>
   ): void;
 
   /**
@@ -2151,6 +2318,33 @@ declare namespace overwolf.games {
     Launcher = 1,
   }
 
+  const enum GameInfoChangeReason {
+    Game = "game",
+    GameChanged = "gameChanged",
+    GameFocusChanged = "gameFocusChanged",
+    GameLaunched = "gameLaunched",
+    GameOverlayCoexistenceDetected = "gameOverlayCoexistenceDetected",
+    GameOverlayCursorVisibility = "gameOverlayCursorVisibility",
+    GameOverlayExlusiveModeChanged = "gameOverlayExlusiveModeChanged",
+    GameOverlayInputHookFailure = "gameOverlayInputHookFailure",
+    GameRendererDetected = "gameRendererDetected",
+    GameResolutionChanged = "gameResolutionChanged",
+    GameTerminated = "gameTerminated",
+    GameWindowDataChanged = "gameWindowDataChanged",
+  }
+
+  const enum KnownOverlayCoexistenceApps {
+    Asus = "asus",
+    Discord = "discord",
+    MSIAfterBurner = "MSIAfterBurner",
+    Nahimic = "nahimic",
+    Nahimic2 = "nahimic2",
+    None = "none",
+    ObsStudio = "obsStudio",
+    PlaysTV = "playsTV",
+    RazerSynapse = "razerSynapse",
+  }
+
   interface GameInfo {
     ActualDetectedRenderers: number;
     ActualGameRendererAllowsVideoCapture: boolean;
@@ -2319,6 +2513,7 @@ declare namespace overwolf.games {
     typeAsString: string;
     windowHandle: { value: number; };
     monitorHandle: { value: number; };
+    processId: number;
   }
 
   interface GameInfoUpdate {
@@ -2376,6 +2571,17 @@ declare namespace overwolf.games {
     typeAsString: string;
     windowHandle: { value: number; };
     monitorHandle: { value: number; };
+    processId: number;
+    overlayInfo: OverlayInfo;
+  }
+
+  interface OverlayInfo {
+    coexistingApps?: KnownOverlayCoexistenceApps[];
+    inputFailure?: boolean;
+    hadInGameRender?: boolean;
+    isCursorVisible?: boolean;
+    exclusiveModeDisabled?: boolean;
+    oopOverlay?: boolean;
   }
 
   interface GameInfoUpdatedEvent {
@@ -2386,6 +2592,7 @@ declare namespace overwolf.games {
     gameChanged: boolean;
     gameOverlayChanged: boolean;
     overlayInputHookError?: boolean;
+    reason?: GameInfoChangeReason;
   }
 
   interface MajorFrameRateChangeEvent {
@@ -2442,6 +2649,14 @@ declare namespace overwolf.games {
   function getRecentlyPlayedGames(
     maxNumOfGames: number,
     callback: CallbackFunction<GetRecentlyPlayedResult>
+  ): void;
+
+  /**
+   * Returns the last played gameinfo (when no game is currently running).
+   * @param callback Called with the result.
+   */
+  function getLastRunningGameInfo(
+    callback: CallbackFunction<GetGameInfoResult>
   ): void;
 
   /**
@@ -2832,7 +3047,7 @@ declare namespace overwolf.web {
     enum MessageType {
       Ping = "ping",
       Binary = "binary",
-      Text = "text"
+      Text = "text",
     }
 
   }
@@ -3412,8 +3627,8 @@ declare namespace overwolf.streaming {
       INTEL = "INTEL",
       X264 = "X264",
       NVIDIA_NVENC = "NVIDIA_NVENC",
-      AMD_AMF = "AMD_AMF",
       NVIDIA_NVENC_NEW = "NVIDIA_NVENC_NEW",
+      AMD_AMF = "AMD_AMF",
     }
 
     enum StreamEncoderPreset_Intel {
@@ -3499,6 +3714,17 @@ declare namespace overwolf.streaming {
       Dot = "Dot",
       DotAndTimer = "DotAndTimer",
     }
+
+    const enum eVideoBaseFrameSizeSource {
+      Auto = "Auto",
+      Setting = "Setting",
+    }
+
+    const enum eVideoFrameSizeCalcMethod {
+      Original = "Original",
+      ExactOrKeepRatio = "ExactOrKeepRatio",
+      ExactOrClosestResolution = "ExactOrClosestResolution",
+    }
   }
 
   /**
@@ -3557,11 +3783,16 @@ declare namespace overwolf.streaming {
     /**
      * Create gif as Video (Gif Replay Type only).
      */
-    gif_as_video: boolean;
+    gif_as_video?: boolean;
     /**
-     * Max media folder size in GB
+     * Max media folder size in GB. Deprecated
      */
-    max_quota_gb: number;
+    max_quota_gb?: number;
+
+    /**
+     * Quota information
+     */
+    quota?: StreamQuotaParams;
   }
 
   interface StreamInfo {
@@ -3599,52 +3830,52 @@ declare namespace overwolf.streaming {
      * Defines if to try to automatically calculate the kbps. If set to true,
      * then the max_kbps field is ignored.
      */
-    auto_calc_kbps: boolean;
+    auto_calc_kbps?: boolean;
     /**
      * Defines the Frames Per Second for the stream.
      */
-    fps: number;
+    fps?: number;
     /**
      * Defines the stream width in pixels.
      */
-    width: number;
+    width?: number;
     /**
      * Defines the stream height in pixels.
      */
-    height: number;
+    height?: number;
     /**
      * Defines the maximum KB per second of the stream.
      */
-    max_kbps: number;
+    max_kbps?: number;
     /**
      * Defines the length of the buffer to be recorded in millisenconds (max 40
      * seconds)
      */
-    buffer_length: number;
+    buffer_length?: number;
     /**
      * Interval between frames when creating gifs.
      */
-    frame_interval: number;
+    frame_interval?: number;
     /**
      * The interval, in milliseconds, in which to test for dropped frames.
      */
-    test_drop_frames_interval: number;
+    test_drop_frames_interval?: number;
     /**
      * The ratio of dropped to non-dropped frames for which to issue a
      * notification.
      */
-    notify_dropped_frames_ratio: number;
+    notify_dropped_frames_ratio?: number;
     /**
      * Defines file maximum size. when video reach `max_file_size_bytes`, the
      * recorder will flash the video file and stat a new video file.
      * `onFileSpilt` event will be fired.
      */
-    max_file_size_bytes: number;
+    max_file_size_bytes?: number;
     /**
      * In case `max_file_size_bytes` is on, full video will be recorded to disk,
      * parallel to splits videos.
      */
-    include_full_size_video: boolean;
+    include_full_size_video?: boolean;
     /**
      * Defines Sub folder for video file path destination (Optional).
      * OverwolfVideoFolder\AppName\|sub_folder_name\|file_name| In case
@@ -3663,31 +3894,50 @@ declare namespace overwolf.streaming {
      * Do not use Overwolf capture setting. In case True you must provider all
      * video setting (encoder..)
      */
-    override_overwolf_setting: boolean;
+    override_overwolf_setting?: boolean;
     /**
      * Do not start video replay service in case shared texture is not
      * supported.
      */
-    disable_when_sht_not_supported: boolean;
+    disable_when_sht_not_supported?: boolean;
     /**
      * Position of the recorder indicator. Available for video capture only.
      */
-    indication_position: enums.IndicationPosition;
+    indication_position?: enums.IndicationPosition;
     /**
      * Type of the recorder indicator. Available for video capture only.
      */
-    indication_type: enums.IndicationType;
+    indication_type?: enums.IndicationType;
 
     /**
      *  use the app "short name" as the folder name, instead of using the app name from the manifest.
      */
-    use_app_display_name: boolean;
+    use_app_display_name?: boolean;
 
     /**
      * Add sources to video (currently only webcam is supported)
      */
-    sources: VideoSource[];
+    sources?: VideoSource[];
 
+    /**
+     *
+     */
+    frame_size_method?: enums.eVideoFrameSizeCalcMethod;
+
+    /**
+     *
+     */
+    base_frame_size_source?: enums.eVideoBaseFrameSizeSource;
+
+    /**
+     *
+     */
+    enable_on_demand_split?: boolean;
+
+    /**
+     *
+     */
+    game_window_capture: GameWindowCapture;
   }
 
   /**
@@ -3698,6 +3948,14 @@ declare namespace overwolf.streaming {
     name: string;
     secondary_file: boolean; //source will be create on secondry video file(i.e another ow-obs.exe process will be createdw ith the same setting as the original one
     transform: overwolf.media.enums.eVideoSourceTransform;
+  }
+
+  /**
+   * Game window capture options.
+   */
+  interface GameWindowCapture {
+    enable_when_available: boolean; //Disabled by default
+    capture_overwolf_windows: boolean; //Default value is taken from the Overwolf Settings
   }
 
   /**
@@ -3746,7 +4004,7 @@ declare namespace overwolf.streaming {
    */
   interface StreamingVideoEncoderx264Settings {
     /**
-     * Defines the number of frames after which to send a keyframe.
+     * Defines which preset the encoder should use.
      */
     preset?: enums.StreamEncoderPreset_x264;
     /**
@@ -3754,7 +4012,7 @@ declare namespace overwolf.streaming {
      */
     rate_control?: enums.StreamEncoderRateControl_x264;
     /**
-     * Defines which preset the encoder should use.
+     * Defines the number of frames after which to send a keyframe.
      */
     keyframe_interval: number;
   }
@@ -3766,7 +4024,7 @@ declare namespace overwolf.streaming {
     /**
      * Defines which preset the encoder should use.
      */
-    preset?: enums.StreamEncoderRateControl_AMD_AMF;
+    preset?: enums.StreamEncoderPreset_AMD_AMF;
     /**
      * Defines the rate control mode the encoder should use.
      */
@@ -3789,11 +4047,11 @@ declare namespace overwolf.streaming {
     /**
      * Defines which monitor to stream when streaming desktop.
      */
-    monitor_id: number;
+    monitor_id?: number;
     /**
      * Defines if to force desktop streaming even when a game is in foreground.
      */
-    force_capture: boolean;
+    force_capture?: boolean;
   }
 
   /**
@@ -3805,9 +4063,21 @@ declare namespace overwolf.streaming {
      */
     mic?: StreamDeviceVolume;
     /**
+     * Defines the microphone volume as applied to the stream in a range of 0 to 100.
+     */
+     mic_volume?: number;
+    /**
      * Defines the game volume as applied to the stream.
      */
     game?: StreamDeviceVolume;
+    /**
+     * Defines the game volume as applied to the stream in a range of 0 to 100.
+     */
+     game_volume?: number;
+     /**
+     * Enable multiple audio tracks: Track 1: Microphone + Desktop, Track 2: Desktop output, Track 3: Microphone input.
+     */
+      separate_tracks?: boolean;
   }
 
   /**
@@ -3817,15 +4087,15 @@ declare namespace overwolf.streaming {
     /**
      * Defines if the device is enabled.
      */
-    enable: boolean;
+    enable?: boolean;
     /**
      * Defines the device volume in the range of 0 to 100.
      */
-    volume: number;
+    volume?: number;
     /**
      * Defines the device ID to use.
      */
-    device_id: string;
+    device_id?: string;
   }
 
   /**
@@ -3854,6 +4124,14 @@ declare namespace overwolf.streaming {
   }
 
   /**
+   * Basic quota information
+   */
+  interface StreamQuotaParams {
+    max_quota_gb: number;
+    excluded_directories?: string[];
+  }
+
+  /**
    * A settings container for a stream Overwolf watermark settings.
    */
   interface WatermarkSettings {
@@ -3867,6 +4145,11 @@ declare namespace overwolf.streaming {
   interface EncoderData {
     name: string;
     display_name: string;
+    enabled: boolean;
+    presets: string[];
+    valid: boolean;
+    vendor_error: string;
+    error_decsription: string;
   }
 
   interface AudioDeviceData {
@@ -3886,6 +4169,7 @@ declare namespace overwolf.streaming {
   interface StreamEvent {
     stream_id?: number;
     SubErrorMessage?: string;
+    is_game_window_capture?: boolean;
   }
 
   interface GetWatermarkSettingsResult extends Result {
@@ -3924,6 +4208,7 @@ declare namespace overwolf.streaming {
     extra: string;
     osVersion: string;
     osBuild: string;
+    total_frames: number;
   }
 
   interface StopStreamingResult extends Result {
@@ -3944,6 +4229,10 @@ declare namespace overwolf.streaming {
     duration: number;
     count: number;
     next_file: string;
+  }
+
+  interface SupportedEncodersUpdatedEvent {
+    encoders?: EncoderData[];
   }
 
   /**
@@ -4133,7 +4422,13 @@ declare namespace overwolf.streaming {
    * Fired upon video file splited.
    */
   const onVideoFileSplited: Event<VideoFileSplitedEvent>;
+
+  /**
+   * Fired upon support encoder list updated.
+   */
+ const onSupportedEncodersUpdated: Event<SupportedEncodersUpdatedEvent>;
 }
+
 
 declare namespace overwolf.log {
   /**
@@ -4546,7 +4841,7 @@ declare namespace overwolf.extensions {
       filter: string;
     };
     /**
-     * If set to true, app local data will not be cleaned up after app uninstallation.
+     * If set to true, app localStorage data will not be cleaned up after app uninstallation.
      * Default value – “false”
      */
     disable_cleanup?: boolean;
@@ -4600,6 +4895,11 @@ declare namespace overwolf.extensions {
      * runtime, use setWindowStyle().
      */
     clickthrough?: boolean;
+    /**
+     * Indicates whether the   Mouse and keyboard input will pass to the window AND to the game (no input blocking). To change this property at
+     * runtime, use setWindowStyle().
+     */
+     style?: overwolf.windows.enums.WindowStyle;
     /**
      * When set to true, disable right clicks entirely for this window.
      */
@@ -4986,15 +5286,74 @@ declare namespace overwolf.extensions.io {
       videos = "videos",
       appData = "appData",
     }
+
+    const enum FileType {
+      file = "file",
+      directory = "directory"
+    }
   }
 
   interface GetStoragePathResult extends Result {
     path: string;
   }
 
+  interface Content {
+    type: enums.FileType;
+    path: string;
+  }
+
+  interface ReadTextFileResult extends Result {
+    content: string;
+  }
+
+  interface ExistResult extends Result {
+    type: enums.FileType;
+  }
+
+  interface DirResult extends Result {
+    files: string[];
+    directories: string[];
+  }
+
+  interface DeleteResult extends Result {
+    undeleted_content: Content[];
+  }
+
+  function createDirectory(
+    space: enums.StorageSpace,
+    path: string,
+    callback: CallbackFunction<Result>
+  ): void;
+
   function getStoragePath(
     space: enums.StorageSpace,
     callback: CallbackFunction<GetStoragePathResult>
+  ): void;
+
+  function exist(
+    space: enums.StorageSpace,
+    path: string,
+    callback: CallbackFunction<ExistResult>
+  ): void;
+
+  function move(
+    space: enums.StorageSpace,
+    source: string,
+    destination: string,
+    callback: CallbackFunction<Result>
+  ): void;
+
+  function copy(
+    space: enums.StorageSpace,
+    source: string,
+    destination: string,
+    callback: CallbackFunction<Result>
+  ): void;
+
+  function dir(
+    space: enums.StorageSpace,
+    directoryPath: string,
+    callback: CallbackFunction<DirResult>
   ): void;
 
   function readTextFile(
@@ -5292,7 +5651,7 @@ declare namespace overwolf.utils {
       LoginPage = "LoginPage",
       OneAppPage = "OneAppPage",
       SubscriptionPage = "SubscriptionPage",
-      ReviewsPage = "ReviewsPage"
+      ReviewsPage = "ReviewsPage",
     }
   }
 
@@ -5306,7 +5665,7 @@ declare namespace overwolf.utils {
     width: number;
     height: number;
     is_primary: boolean;
-    monitorHandle: { value: number; };
+    handle: { value: number; };
   }
 
   interface GPUInfo {
@@ -5356,13 +5715,15 @@ declare namespace overwolf.utils {
     OSReleaseId?: string;
     PhysicalCPUCount?: number;
     VidEncSupport?: boolean;
+    /** indicates if the current OS enabled the [Windows 10 Hardware-Accelerated GPU Scheduling](../topics/video-capture#windows-10-hardware-accelerated-gpu-scheduling-notice) feature */
+    HAGSEnabled?: boolean
   }
 
   interface OpenStoreParams {
     /**
      * The target app id.
      */
-    uid: string;
+    uid?: string;
     /**
      * Store page to open.
      */
@@ -5371,6 +5732,7 @@ declare namespace overwolf.utils {
 
   interface OpenFilePickerResult extends Result {
     url?: string;
+    file?: string;
     urls?: string[];
   }
 
@@ -5416,9 +5778,7 @@ declare namespace overwolf.utils {
    * bounds, and names.
    * @param callback Called with the monitors array.
    */
-  function getMonitorsList(
-    callback: (result: { displays: Display[]; }) => void
-  ): void;
+  function getMonitorsList(callback: CallbackFunction<getMonitorsListResult>): void;
 
   /**
    * Sends a string representing a key stroke to the game, causing a simulated
@@ -5594,6 +5954,8 @@ declare namespace overwolf.settings {
 
   interface GeneralExtensionSettings {
     auto_launch_with_overwolf?: boolean;
+    exit_overwolf_on_exit?: boolean;
+    channel?: string;
   }
 
   interface GetHotKeyResult extends Result {
@@ -5614,6 +5976,10 @@ declare namespace overwolf.settings {
       /** "Folders_VideoCapturesFolder" */
       Name: string;
     };
+  }
+
+  interface SetFolderResult extends Result {
+    path: string;
   }
 
   interface GetVideoCaptureSettingsResult extends Result {
@@ -5854,7 +6220,7 @@ declare namespace overwolf.settings.games {
   }
 
   /**
-   * Returns the current Overlay setting for the given game (if any exist)
+   * Returns the current Overlay setting for the given game (if any exist).
    * @param gameClassId the game id for which the flag is retrieved for
    * @param callback
    */
@@ -5864,13 +6230,24 @@ declare namespace overwolf.settings.games {
   ): void;
 
   /**
-   * Returns the current Auto-Launch enabled setting for the calling app ina
-   * given game (gameClassId)
+   * Returns the current Auto-Launch enabled setting for the calling app in a given game (gameClassId).
    * @param gameClassId the game id for which the flag is retrieved for
    * @param callback
    */
   function getAutoLaunchEnabled(
     gameClassId: number,
+    callback: CallbackFunction<AutolaunchEnabledResult>
+  ): void;
+
+  /**
+   * Sets the current Auto-Launch enabled setting for the calling app in a given game (gameClassId).
+   * @param gameClassId the game id for which the flag is retrieved for
+   * @param enabled whether auto-launch should be enabled
+   * @param callback
+   */
+   function setAutoLaunchEnabled(
+    gameClassId: number,
+    enabled: boolean,
     callback: CallbackFunction<AutolaunchEnabledResult>
   ): void;
 
@@ -6163,7 +6540,7 @@ declare namespace overwolf.social.gfycat {
     url: string;
   }
 
-  interface ShareParamaeters {
+  interface ShareParameters {
     file: string;
     trimming: media.videos.VideoCompositionSegment;
     title: string;
@@ -6208,7 +6585,7 @@ declare namespace overwolf.social.gfycat {
    * @param callback Will contain the status of the request.
    */
   function share(
-    gfycatShareParams: ShareParamaeters,
+    gfycatShareParams: ShareParameters,
     callback: CallbackFunction<Result>
   ): void;
 
@@ -6219,7 +6596,7 @@ declare namespace overwolf.social.gfycat {
 }
 
 declare namespace overwolf.social.twitter {
-  interface ShareParamaeters {
+  interface ShareParameters {
     file: string;
     message: string;
     trimming: media.videos.VideoCompositionSegment;
@@ -6271,7 +6648,7 @@ declare namespace overwolf.social.twitter {
    * @param callback Will contain the status of the request.
    */
   function share(
-    twitterShareParams: ShareParamaeters,
+    twitterShareParams: ShareParameters,
     callback: CallbackFunction<Result>
   ): void;
 
@@ -6288,7 +6665,7 @@ declare namespace overwolf.social.youtube {
     Private = "Private",
   }
 
-  interface ShareParamaeters {
+  interface ShareParameters {
     file: string;
     title: string;
     description: string;
@@ -6347,7 +6724,7 @@ declare namespace overwolf.social.youtube {
    * @param callback Will contain the status of the request.
    */
   function share(
-    youTubeShareParams: ShareParamaeters,
+    youTubeShareParams: ShareParameters,
     callback: CallbackFunction<Result>
   ): void;
 
@@ -6366,7 +6743,7 @@ declare namespace overwolf.social.reddit {
     allowable_content: string;
   }
 
-  interface ShareParamaeters {
+  interface ShareParameters {
     /**
      * The file to share.
      */
@@ -6509,11 +6886,11 @@ declare namespace overwolf.social.reddit {
    * - Disconnected (user isn't signed in)
    * - MissingFile (trying to share a missing file)
    * - UnsupportedFile (trying to share an unsupported format)
-   * @param youTubeShareParams The share parameters.
+   * @param redditShareParams The share parameters.
    * @param callback Will contain the status of the request.
    */
   function share(
-    youTubeShareParams: ShareParamaeters,
+    redditShareParams: ShareParameters,
     callback: CallbackFunction<Result>
   ): void;
 
