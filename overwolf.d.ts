@@ -1330,7 +1330,7 @@ declare namespace overwolf.profile.subscriptions {
    * Returns more details about all the active subscriptions for the calling extension via callback.
    * @param callback Returns an array of active plans, or an error.
    */
-   function getDetailedActivePlans(
+  function getDetailedActivePlans(
     callback: CallbackFunction<GetDetailedActivePlansResult>
   ): void;
 
