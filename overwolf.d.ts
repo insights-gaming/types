@@ -51,6 +51,15 @@ declare namespace overwolf.io {
       UnicodeBOM = "UnicodeBOM",
       ASCII = "ASCII",
     }
+    enum encoding {
+      Default = "Default",
+      UTF8 = "UTF8",
+      UTF32 = "UTF32",
+      Unicode = "Unicode",
+      UTF7 = "UTF7",
+      ASCII = "ASCII",
+      BigEndianUnicode = "BigEndianUnicode",
+    }
   }
 
   namespace paths {
@@ -85,6 +94,7 @@ declare namespace overwolf.io {
 
   interface ListenFileOptions {
     skipToEnd: boolean;
+    encoding?: enums.eEncoding;
   }
 
   interface FileExistsResult extends Result {
@@ -315,9 +325,9 @@ declare namespace  overwolf.media {
   }
 
   interface MemoryScreenshotParams {
-    roundAwayFromZero: boolean;
-    rescale: RescaleParams;
-    crop: CropParams;
+    roundAwayFromZero?: boolean;
+    rescale?: RescaleParams;
+    crop?: CropParams;
   }
 
   interface FileResult extends Result {
@@ -1160,7 +1170,7 @@ declare namespace overwolf.notifications  {
   /**
    * Fired when a user tapped on the body of a toast notification or performed an action inside a toast notification.
    */
-  const onToastNotification: Event<ToastNotificationEvent>;
+  const onToastInteraction: Event<ToastNotificationEvent>;
 
   /**
    * Show Windows toast notification.
@@ -1344,6 +1354,7 @@ declare namespace overwolf.windows {
   namespace enums {
     enum WindowStyle {
       InputPassThrough = "InputPassThrough",
+      BottomMost = "BottomMost"
     }
 
     enum WindowDragEdge {
@@ -1470,7 +1481,7 @@ declare namespace overwolf.windows {
     window_id: string;
     width: number;
     height: number;
-    auto_dpi_resize: boolean;
+    auto_dpi_resize?: boolean;
   }
 
   interface WindowStateChangedEvent {
@@ -2582,6 +2593,7 @@ declare namespace overwolf.games {
     isCursorVisible?: boolean;
     exclusiveModeDisabled?: boolean;
     oopOverlay?: boolean;
+    isFullScreenOptimizationDisabled ?: boolean;
   }
 
   interface GameInfoUpdatedEvent {
@@ -2592,7 +2604,7 @@ declare namespace overwolf.games {
     gameChanged: boolean;
     gameOverlayChanged: boolean;
     overlayInputHookError?: boolean;
-    reason?: GameInfoChangeReason;
+    reason: ReadonlyArray<GameInfoChangeReason>;
   }
 
   interface MajorFrameRateChangeEvent {
@@ -3938,6 +3950,11 @@ declare namespace overwolf.streaming {
      *
      */
     game_window_capture: GameWindowCapture;
+    /**
+     * Keep capturing the game when the game loses focus (i.e do not show "Be Right Back").
+     * Note: if game is minimized, BRB will be shown.
+     */
+     keep_game_capture_on_lost_focus: boolean;
   }
 
   /**
@@ -4574,7 +4591,7 @@ declare namespace overwolf.extensions {
     /**
      * Declares the type of application. Can only be "WebApp"
      */
-    type: ExtensionType;
+    type: "WebApp"; //should be changed in the future to the enum "ExtensionType"
     /**
      * Includes app metadata
      */
@@ -4969,10 +4986,14 @@ declare namespace overwolf.extensions {
     start_position?: Point;
     /**
      * Indicates whether the window will be on top of other Overwolf windows.
-     * Handle with care as topmost windows can negatively impact user
-     * experience.
+     * Handle with care as topmost windows can negatively impact user experience.
      */
     topmost?: boolean;
+     /**
+     * Indicates whether the window will be on bottom of other Overwolf windows.
+     * Handle with care as bottommost windows can negatively impact user experience.
+     */
+      bottommost?: boolean;
     /**
      * Refrain from non _blank elements from “taking-over” the entire app’s
      * window.
@@ -5118,7 +5139,7 @@ declare namespace overwolf.extensions {
   }
 
   interface CheckForUpdateResult extends Result {
-    state?: ExtensionUpdateState;
+    state?: "UpToDate" | "UpdateAvailable" | "PendingRestart"; //should be changed in the future to the enum "ExtensionUpdateState"
     updateVersion?: string;
   }
 
