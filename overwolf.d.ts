@@ -51,7 +51,7 @@ declare namespace overwolf.io {
       UnicodeBOM = "UnicodeBOM",
       ASCII = "ASCII",
     }
-    const enum encoding {
+    enum encoding {
       Default = "Default",
       UTF8 = "UTF8",
       UTF32 = "UTF32",
