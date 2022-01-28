@@ -2586,6 +2586,36 @@ declare namespace overwolf.games {
     overlayInfo: OverlayInfo;
   }
 
+  interface GetRunningGameInfoResult2 {
+    isInFocus: boolean;
+    isRunning: boolean;
+    allowsVideoCapture: boolean;
+    title: string;
+    displayName: string;
+    shortTitle: string;
+    id: number;
+    classId: number;
+    width: number;
+    height: number;
+    logicalWidth: number;
+    logicalHeight: number;
+    renderers: string[];
+    detectedRenderer: string;
+    executionPath: string;
+    sessionId: string;
+    commandLine: string;
+    type: GameInfoType;
+    typeAsString: string;
+    windowHandle: { value: number; };
+    monitorHandle: { value: number; };
+    processId: number;
+    overlayInfo: OverlayInfo;
+  }
+
+  interface GetRunningGameInfoResult2 extends Result {
+    gameInfo?: GetRunningGameInfoResult2
+  }
+
   interface OverlayInfo {
     coexistingApps?: KnownOverlayCoexistenceApps[];
     inputFailure?: boolean;
@@ -2623,6 +2653,15 @@ declare namespace overwolf.games {
    */
   function getRunningGameInfo(
     callback: CallbackFunction<GetRunningGameInfoResult>
+  ): void;
+
+  /**
+   * Returns an object with information about the currently running game (or
+   * active games, if more than one), or null if no game is running.
+   * @param callback Called with the currently running or active game info. See
+   */
+  function getRunningGameInfo2(
+    callback: CallbackFunction<GetRunningGameInfoResult2>
   ): void;
 
   /**
@@ -6462,14 +6501,18 @@ declare namespace overwolf.social.discord {
   }
 
   interface ShareParameters {
-    file: string;
+    /** The file to share.
+    * Note: Since version 0.153, the "file" param is optional when calling overwolf.social.discord.share(). Instead, you can use the "message" param to include a URL of a file that you want to share.*/
+    file?: string;
     channelId: string;
     message: string;
-    trimming: media.videos.VideoCompositionSegment;
-    events: string[];
-    gameClassId: number;
-    gameTitle: string;
-    metadata: any;
+    /** An object containing start time and end time for the desired VideoCompositionSegment */
+    trimming?: media.videos.VideoCompositionSegment;
+    events?: string[];
+    gameClassId?: number;
+    gameTitle?: string;
+    /** Extra information about the game session (How is this used?) */
+    metadata?: any;
   }
 
   interface GetGuildsResult extends Result {
@@ -6535,7 +6578,7 @@ declare namespace overwolf.social.discord {
    * @param callback Will contain the status of the request.
    */
   function share(
-    discordShareParams: ShareParameters,
+    discordShareParams: overwolf.social.discord.ShareParameters,
     callback: CallbackFunction<Result>
   ): void;
 
