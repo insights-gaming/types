@@ -2587,32 +2587,29 @@ declare namespace overwolf.games {
   }
 
   interface GetRunningGameInfoResult2GameInfo {
-    allowsVideoCapture: boolean;
-    classId: number;
-    commandLine: string;
-    executionPath: string;
-    detectedRenderer: string;
-    displayName: string;
-    height: number;
-    id: number;
     isInFocus: boolean;
     isRunning: boolean;
-    logicalHeight: number;
-    logicalWidth: number;
-    monitorHandle: { value: number };
-    oopOverlay: boolean;
-    overlayInfo: OverlayInfo;
-    overlayInputHookError: boolean;
-    processId: number;
-    renderers: string[];
-    sessionId: string;
-    shortTitle: string;
-    terminationUnixEpochTime: null | any; // don't what the correct values are
+    allowsVideoCapture: boolean;
     title: string;
+    displayName: string;
+    shortTitle: string;
+    id: number;
+    classId: number;
+    width: number;
+    height: number;
+    logicalWidth: number;
+    logicalHeight: number;
+    renderers: string[];
+    detectedRenderer: string;
+    executionPath: string;
+    sessionId: string;
+    commandLine: string;
     type: GameInfoType;
     typeAsString: string;
-    width: number;
-    windowHandle: { value: number };
+    windowHandle: { value: number; };
+    monitorHandle: { value: number; };
+    processId: number;
+    overlayInfo: OverlayInfo;
   }
 
   interface GetRunningGameInfoResult2 extends Result {
