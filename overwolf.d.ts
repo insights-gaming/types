@@ -3987,7 +3987,7 @@ declare namespace overwolf.streaming {
     /**
      * Add sources to video (currently only webcam is supported)
      */
-    sources?: VideoSource[];
+    sources?: overwolf.media.replays.VideoSource[];
 
     /**
      *
@@ -4012,7 +4012,7 @@ declare namespace overwolf.streaming {
      * Keep capturing the game when the game loses focus (i.e do not show "Be Right Back").
      * Note: if game is minimized, BRB will be shown.
      */
-     keep_game_capture_on_lost_focus?: boolean;
+    keep_game_capture_on_lost_focus?: boolean;
   }
 
   /**
