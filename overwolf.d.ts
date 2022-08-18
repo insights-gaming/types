@@ -106,6 +106,7 @@ declare namespace overwolf.io {
   }
 
   interface ReadFileContentsResult extends Result {
+    status: string;
     content?: string;
   }
 
@@ -787,6 +788,23 @@ declare namespace overwolf.media.replays {
     }
   }
 
+  interface WebCamParam {
+    device_id: string;
+  }
+
+  /**
+   * Defines the video source settings.
+   */
+  interface VideoSource {
+    source_type: overwolf.media.enums.eSourceType;
+    name: string;
+    secondary_file: boolean; // Source will be saved to a secondary video file (i.e another ow-obs.exe process will be created with the same settings as the original one.
+    transform: overwolf.media.enums.eVideoSourceTransform;
+    parameters: overwolf.media.replays.WebCamParam;
+    position: { x: number, y: number }
+    size_scale: { x: number, y: number }
+  }
+
   /**
    * Replays settings container.
    */
@@ -1380,14 +1398,14 @@ declare namespace overwolf.windows {
       on = "on",
       off = "off",
     }
-  }
 
-  enum WindowStateEx {
-    CLOSED = "closed",
-    MINIMIZED = "minimized",
-    HIDDEN = "hidden",
-    NORMAL = "normal",
-    MAXIMIZED = "maximized"
+    enum WindowStateEx {
+      CLOSED = "closed",
+      MINIMIZED = "minimized",
+      HIDDEN = "hidden",
+      NORMAL = "normal",
+      MAXIMIZED = "maximized"
+    }
   }
 
 
@@ -1395,7 +1413,7 @@ declare namespace overwolf.windows {
     name: string;
     id: string;
     state: string;
-    stateEx: WindowStateEx;
+    stateEx: enums.WindowStateEx;
     isVisible: boolean;
     left: number;
     top: number;
@@ -1455,12 +1473,12 @@ declare namespace overwolf.windows {
   interface GetWindowStateResult extends Result {
     window_id?: string;
     window_state?: string;
-    window_state_ex?: WindowStateEx;
+    window_state_ex?: enums.WindowStateEx;
   }
 
   interface GetWindowsStatesResult extends Result {
     result: Dictionary<string>;
-    resultV2: Dictionary<WindowStateEx>;
+    resultV2: Dictionary<enums.WindowStateEx>;
   }
 
   interface IsMutedResult extends Result {
@@ -1488,8 +1506,8 @@ declare namespace overwolf.windows {
     window_id: string;
     window_state: string;
     window_previous_state: string;
-    window_state_ex: WindowStateEx;
-    window_previous_state_ex: WindowStateEx;
+    window_state_ex: enums.WindowStateEx;
+    window_previous_state_ex: enums.WindowStateEx;
     app_id: string;
     window_name: string;
   }
@@ -2324,36 +2342,38 @@ declare namespace overwolf.benchmarking {
 }
 
 declare namespace overwolf.games {
-  enum GameInfoType {
-    Game = 0,
-    Launcher = 1,
-  }
+  namespace enums {
+    enum GameInfoType {
+      Game = 0,
+      Launcher = 1,
+    }
 
-  enum GameInfoChangeReason {
-    Game = "game",
-    GameChanged = "gameChanged",
-    GameFocusChanged = "gameFocusChanged",
-    GameLaunched = "gameLaunched",
-    GameOverlayCoexistenceDetected = "gameOverlayCoexistenceDetected",
-    GameOverlayCursorVisibility = "gameOverlayCursorVisibility",
-    GameOverlayExlusiveModeChanged = "gameOverlayExlusiveModeChanged",
-    GameOverlayInputHookFailure = "gameOverlayInputHookFailure",
-    GameRendererDetected = "gameRendererDetected",
-    GameResolutionChanged = "gameResolutionChanged",
-    GameTerminated = "gameTerminated",
-    GameWindowDataChanged = "gameWindowDataChanged",
-  }
+    enum GameInfoChangeReason {
+      Game = "game",
+      GameChanged = "gameChanged",
+      GameFocusChanged = "gameFocusChanged",
+      GameLaunched = "gameLaunched",
+      GameOverlayCoexistenceDetected = "gameOverlayCoexistenceDetected",
+      GameOverlayCursorVisibility = "gameOverlayCursorVisibility",
+      GameOverlayExlusiveModeChanged = "gameOverlayExlusiveModeChanged",
+      GameOverlayInputHookFailure = "gameOverlayInputHookFailure",
+      GameRendererDetected = "gameRendererDetected",
+      GameResolutionChanged = "gameResolutionChanged",
+      GameTerminated = "gameTerminated",
+      GameWindowDataChanged = "gameWindowDataChanged",
+    }
 
-  enum KnownOverlayCoexistenceApps {
-    Asus = "asus",
-    Discord = "discord",
-    MSIAfterBurner = "MSIAfterBurner",
-    Nahimic = "nahimic",
-    Nahimic2 = "nahimic2",
-    None = "none",
-    ObsStudio = "obsStudio",
-    PlaysTV = "playsTV",
-    RazerSynapse = "razerSynapse",
+    enum KnownOverlayCoexistenceApps {
+      Asus = "asus",
+      Discord = "discord",
+      MSIAfterBurner = "MSIAfterBurner",
+      Nahimic = "nahimic",
+      Nahimic2 = "nahimic2",
+      None = "none",
+      ObsStudio = "obsStudio",
+      PlaysTV = "playsTV",
+      RazerSynapse = "razerSynapse",
+    }
   }
 
   interface GameInfo {
@@ -2520,7 +2540,7 @@ declare namespace overwolf.games {
     executionPath: string;
     sessionId: string;
     commandLine: string;
-    type: GameInfoType;
+    type: enums.GameInfoType;
     typeAsString: string;
     windowHandle: { value: number; };
     monitorHandle: { value: number; };
@@ -2578,7 +2598,7 @@ declare namespace overwolf.games {
     executionPath: string;
     sessionId: string;
     commandLine: string;
-    type: GameInfoType;
+    type: enums.GameInfoType;
     typeAsString: string;
     windowHandle: { value: number; };
     monitorHandle: { value: number; };
@@ -2604,7 +2624,7 @@ declare namespace overwolf.games {
     executionPath: string;
     sessionId: string;
     commandLine: string;
-    type: GameInfoType;
+    type: enums.GameInfoType;
     typeAsString: string;
     windowHandle: { value: number; };
     monitorHandle: { value: number; };
@@ -2617,7 +2637,7 @@ declare namespace overwolf.games {
   }
 
   interface OverlayInfo {
-    coexistingApps?: KnownOverlayCoexistenceApps[];
+    coexistingApps?: enums.KnownOverlayCoexistenceApps[];
     inputFailure?: boolean;
     hadInGameRender?: boolean;
     isCursorVisible?: boolean;
@@ -2634,7 +2654,7 @@ declare namespace overwolf.games {
     gameChanged: boolean;
     gameOverlayChanged: boolean;
     overlayInputHookError?: boolean;
-    reason: ReadonlyArray<GameInfoChangeReason>;
+    reason: ReadonlyArray<enums.GameInfoChangeReason>;
   }
 
   interface MajorFrameRateChangeEvent {
@@ -2731,6 +2751,10 @@ declare namespace overwolf.games {
    * Fired when the rendering method of the game has been detected.
    */
   const onGameRendererDetected: Event<GameRendererDetectedEvent>;
+}
+
+declare namespace overwolf.games.tracked {
+  const onTerminated: Event<GameInfoUpdatedEvent>;
 }
 
 declare namespace overwolf.games.launchers {
@@ -3653,6 +3677,7 @@ declare namespace overwolf.streaming {
       both = "both",
       gameOnly = "gameOnly",
       desktopOnly = "desktopOnly",
+	  none = "none"
     }
 
     enum ObsStreamingMode {
@@ -3738,12 +3763,6 @@ declare namespace overwolf.streaming {
       RC_2_PASS_QUALITY = "RC_2_PASS_QUALITY",
     }
 
-    enum eTobiiEffectType {
-      Default = "Default",
-      Bubble = "Bubble",
-      Solid = "Solid",
-      Inverted = "Inverted",
-    }
     enum StreamEncoderRateControl_x264 {
       RC_CBR = "RC_CBR",
       RC_CQP = "RC_CQP",
@@ -3988,22 +4007,12 @@ declare namespace overwolf.streaming {
     /**
      *
      */
-    game_window_capture: GameWindowCapture;
+    game_window_capture?: GameWindowCapture;
     /**
      * Keep capturing the game when the game loses focus (i.e do not show "Be Right Back").
      * Note: if game is minimized, BRB will be shown.
      */
-     keep_game_capture_on_lost_focus: boolean;
-  }
-
-  /**
-   * Defines the video source settings.
-   */
-  interface VideoSource {
-    source_type: overwolf.media.enums.eSourceType;
-    name: string;
-    secondary_file: boolean; //source will be create on secondry video file(i.e another ow-obs.exe process will be createdw ith the same setting as the original one
-    transform: overwolf.media.enums.eVideoSourceTransform;
+     keep_game_capture_on_lost_focus?: boolean;
   }
 
   /**
@@ -4125,7 +4134,7 @@ declare namespace overwolf.streaming {
     /**
      * Defines the game volume as applied to the stream.
      */
-    game?: StreamDeviceVolume;
+    game?: GameAudioDevice;
     /**
      * Defines the game volume as applied to the stream in a range of 0 to 100.
      */
@@ -4152,6 +4161,18 @@ declare namespace overwolf.streaming {
      * Defines the device ID to use.
      */
     device_id?: string;
+  }
+
+  /**
+   * Defines game volume and enablement settings.
+   */
+  interface GameAudioDevice extends StreamDeviceVolume {
+    filtered_capture: GameCaptureOptions;
+  }
+
+  interface GameCaptureOptions {
+    enable: boolean;
+	additional_process_names: string[];
   }
 
   /**
@@ -4237,6 +4258,7 @@ declare namespace overwolf.streaming {
   }
 
   interface GetStreamEncodersResult extends Result {
+    status: string;
     encoders?: EncoderData[];
   }
 
@@ -5164,7 +5186,7 @@ declare namespace overwolf.extensions {
   interface GetManifestResult extends Result, Manifest { }
 
   interface GetInfoResult extends Result {
-    info: string;
+    info: string|{[key:string]:any};
   }
 
   interface GetRunningStateResult extends Result {
@@ -5224,8 +5246,8 @@ declare namespace overwolf.extensions {
   function launch(uid: string, parameter?: any): void;
 
   /**
-   * Sets a string for other extensions to read.
-   * @param info A string to post.
+   * Sets a string or object for other extensions to read.
+   * @param info A string or object to post.
    */
   function setInfo(info: any): void;
 
@@ -5340,7 +5362,7 @@ declare namespace overwolf.extensions {
 }
 
 declare namespace overwolf.extensions.io {
-  namespace enums {
+  export namespace enums {
     enum StorageSpace {
       pictures = "pictures",
       videos = "videos",
@@ -5379,50 +5401,58 @@ declare namespace overwolf.extensions.io {
     undeleted_content: Content[];
   }
 
-  function createDirectory(
+  export function createDirectory(
     space: enums.StorageSpace,
     path: string,
     callback: CallbackFunction<Result>
   ): void;
 
-  function getStoragePath(
+  export function getStoragePath(
     space: enums.StorageSpace,
     callback: CallbackFunction<GetStoragePathResult>
   ): void;
 
-  function exist(
+  export function exist(
     space: enums.StorageSpace,
     path: string,
     callback: CallbackFunction<ExistResult>
   ): void;
 
-  function move(
+  export function move(
     space: enums.StorageSpace,
     source: string,
     destination: string,
     callback: CallbackFunction<Result>
   ): void;
 
-  function copy(
+  function _delete(
+    space: enums.StorageSpace,
+    path: string,
+    callback: CallbackFunction<DeleteResult>
+  ): void;
+
+  export { _delete as delete }
+
+  export function copy(
     space: enums.StorageSpace,
     source: string,
     destination: string,
     callback: CallbackFunction<Result>
   ): void;
 
-  function dir(
+  export function dir(
     space: enums.StorageSpace,
     directoryPath: string,
     callback: CallbackFunction<DirResult>
   ): void;
 
-  function readTextFile(
+  export function readTextFile(
     space: enums.StorageSpace,
     filePath: string,
-    callback: CallbackFunction<overwolf.io.ReadFileContentsResult>
+    callback: CallbackFunction<ReadTextFileResult>
   ): void;
 
-  function writeTextFile(
+  export function writeTextFile(
     space: enums.StorageSpace,
     filePath: string,
     content: string,
@@ -5774,7 +5804,7 @@ declare namespace overwolf.utils {
     OSBuild?: string;
     OSReleaseId?: string;
     PhysicalCPUCount?: number;
-    VidEncSupport?: boolean;
+    VideoEncSupport?: boolean;
     /** indicates if the current OS enabled the [Windows 10 Hardware-Accelerated GPU Scheduling](../topics/video-capture#windows-10-hardware-accelerated-gpu-scheduling-notice) feature */
     HAGSEnabled?: boolean
   }
@@ -5824,6 +5854,10 @@ declare namespace overwolf.utils {
     // timestamp
     installTime: number;
     uptimeSeconds: number;
+  }
+
+  interface UploadClientLogsOptions extends Result {
+    filePrefix: string;
   }
 
   /**
@@ -5941,11 +5975,21 @@ declare namespace overwolf.utils {
     callback: CallbackFunction<Result>
   ): void;
 
-  /**
+   /**
    * Upload Overwolf client logs to Overwolf servers for current calling app.
    * @param callback A callback with the status of the request.
    */
-  function uploadClientLogs(callback: CallbackFunction<Result>): void;
+    function uploadClientLogs(callback: CallbackFunction<Result>): void;
+
+   /**
+   * Upload Overwolf client logs to Overwolf servers for current calling app
+   * with options (such as file prefix)
+   * @param callback A callback with the status of the request.
+   */
+  function uploadClientLogs(
+    options: UploadClientLogsOptions,
+    callback: CallbackFunction<Result>
+  ): void;
 
   /**
    * Returns system Peripherals information.
@@ -6058,7 +6102,7 @@ declare namespace overwolf.settings {
   }
 
   interface GetVideoCaptureSettingsResult extends Result {
-    enconder: string;
+    encoder: string;
     preset: string;
     fps: number;
     resolution: number;
@@ -6447,8 +6491,30 @@ declare namespace overwolf.settings.language {
 }
 
 declare namespace overwolf.social {
+  namespace enums {
+    enum ShareState {
+      Started,
+      Uploading,
+      Finished
+    }
+  }
   interface GetUserInfoResult<T> extends Result {
     userInfo?: T;
+  }
+
+  interface VideoUploadParams {
+    id: string;
+    filePath: string;
+  }
+
+  interface VideoUploadResult extends Result{
+    url: string;
+  }
+
+  interface VideoUploadProgress extends Result{
+    progress: number;
+    id: string;
+    state: enums.ShareState;
   }
 
   interface LoginStateChangedEvent {
@@ -6465,14 +6531,24 @@ declare namespace overwolf.social {
    */
   function getDisabledServices(callback: CallbackFunction<GetDisabledServicesResult<void>>): void;
 
+  function uploadVideo(uploadParams: VideoUploadParams, resultCallback: CallbackFunction<VideoUploadResult>, progressCallback: CallbackFunction<VideoUploadProgress>)
 
+  function cancelUpload(id: string, resultCallback: CallbackFunction<Result>)
 }
 
 declare namespace overwolf.social.discord {
-  enum PostPermission {
-    None = 0,
-    Text,
-    File,
+  namespace enums {
+    enum PostPermission {
+      None = 0,
+      Text,
+      File,
+    }
+
+    enum ShareState {
+      Started,
+      Uploading,
+      Finished
+    }
   }
 
   interface User {
@@ -6505,7 +6581,7 @@ declare namespace overwolf.social.discord {
     parent_id?: string;
     permission_overwrites: PermissionOverwrite[];
     type: number;
-    user_post_permission: PostPermission;
+    user_post_permission: enums.PostPermission;
   }
 
   interface PermissionOverwrite {
@@ -6520,6 +6596,8 @@ declare namespace overwolf.social.discord {
     * Note: Since version 0.153, the "file" param is optional when calling overwolf.social.discord.share(). Instead, you can use the "message" param to include a URL of a file that you want to share.*/
     file?: string;
     channelId: string;
+	  id?: string;
+	  useOverwolfNotifications: boolean;
     message: string;
     /** An object containing start time and end time for the desired VideoCompositionSegment */
     trimming?: media.videos.VideoCompositionSegment;
@@ -6528,6 +6606,21 @@ declare namespace overwolf.social.discord {
     gameTitle?: string;
     /** Extra information about the game session (How is this used?) */
     metadata?: any;
+  }
+
+  interface PostParameters {
+    channelId: string;
+    message: string;
+  }
+
+  interface SocialShareProgress extends Result {
+	  progress: number;
+	  id: string;
+	  state: enums.ShareState;
+  }
+
+  interface SocialShareResult extends Result {
+	  url: string;
   }
 
   interface GetGuildsResult extends Result {
@@ -6597,6 +6690,16 @@ declare namespace overwolf.social.discord {
     callback: CallbackFunction<Result>
   ): void;
 
+  function shareEx(
+    discordShareParams: overwolf.social.discord.ShareParameters,
+    resultCallback: CallbackFunction<SocialShareResult>,
+	  progressCallback: CallbackFunction<SocialShareProgress>
+  ): void;
+
+  function post(
+    discordPostParams: overwolf.social.discord.PostParameters
+  ): void;
+
   /**
    * Fired when the user's login state changes.
    */
@@ -6604,8 +6707,16 @@ declare namespace overwolf.social.discord {
 }
 
 declare namespace overwolf.social.gfycat {
+  namespace enums {
+    enum ShareState {
+      Started,
+      Uploading,
+      Finished
+    }
+  }
+
   interface User {
-    userId: string;
+    userid: string;
     email: string;
     emailVerified: boolean;
     profileImageUrl: string;
@@ -6621,12 +6732,24 @@ declare namespace overwolf.social.gfycat {
 
   interface ShareParameters {
     file: string;
-    trimming: media.videos.VideoCompositionSegment;
+    id?: string;
+    useOverwolfNotifications: boolean;
+    trimming?: media.videos.VideoCompositionSegment;
     title: string;
     privateMode: boolean;
-    tags: string[];
-    gameClassId: number;
-    metadata: any;
+    tags?: string[];
+    gameClassId?: number;
+    metadata?: any;
+  }
+
+  interface SocialShareProgress extends Result {
+    progress: number;
+    id: string;
+    state: enums.ShareState;
+  }
+
+  interface SocialShareResult extends Result {
+    url: string;
   }
 
   /**
@@ -6668,6 +6791,12 @@ declare namespace overwolf.social.gfycat {
     callback: CallbackFunction<Result>
   ): void;
 
+  function shareEx(
+    discordShareParams: overwolf.social.gfycat.ShareParameters,
+    resultCallback: CallbackFunction<overwolf.social.gfycat.SocialShareResult>,
+    progressCallback: CallbackFunction<SocialShareProgress>
+  ): void;
+
   /**
    * Fired when a media event has been posted.
    */
@@ -6675,14 +6804,24 @@ declare namespace overwolf.social.gfycat {
 }
 
 declare namespace overwolf.social.twitter {
+  namespace enums {
+    enum ShareState {
+      Started,
+      Uploading,
+      Finished
+    }
+  }
+
   interface ShareParameters {
     file: string;
+    id?: string;
+    useOverwolfNotifications: boolean;
     message: string;
-    trimming: media.videos.VideoCompositionSegment;
-    tags: string[];
-    gameClassId: number;
-    gameTitle: string;
-    metadata: any;
+    trimming?: media.videos.VideoCompositionSegment;
+    tags?: string[];
+    gameClassId?: number;
+    gameTitle?: string;
+    metadata?: any;
   }
 
   interface User {
@@ -6691,6 +6830,16 @@ declare namespace overwolf.social.twitter {
     name: string;
     email: string;
     avatar: string;
+  }
+
+  interface SocialShareProgress extends Result {
+    progress: number;
+    id: string;
+    state: enums.ShareState;
+  }
+
+  interface SocialShareResult extends Result {
+    url: string;
   }
 
   /**
@@ -6731,6 +6880,12 @@ declare namespace overwolf.social.twitter {
     callback: CallbackFunction<Result>
   ): void;
 
+  function shareEx(
+    discordShareParams: overwolf.social.twitter.ShareParameters,
+    resultCallback: CallbackFunction<overwolf.social.twitter.SocialShareResult>,
+    progressCallback: CallbackFunction<overwolf.social.twitter.SocialShareProgress>
+  ): void;
+
   /**
    * Fired when the user's login state changes.
    */
@@ -6738,21 +6893,33 @@ declare namespace overwolf.social.twitter {
 }
 
 declare namespace overwolf.social.youtube {
-  enum Privacy {
-    Public = "Public",
-    Unlisted = "Unlisted",
-    Private = "Private",
+  namespace enums {
+    enum YouTubePrivacy {
+      Public = "Public",
+      Unlisted = "Unlisted",
+      Private = "Private",
+    }
+
+    enum ShareState {
+      Started,
+      Uploading,
+      Finished
+    }
   }
+
+
 
   interface ShareParameters {
     file: string;
+	  id?: string;
+	  useOverwolfNotifications: boolean;
     title: string;
     description: string;
-    trimming: media.videos.VideoCompositionSegment;
-    privacy: Privacy;
-    tags: string[];
-    gameClassId: number;
-    gameTitle: string;
+    trimming?: media.videos.VideoCompositionSegment;
+    privacy: enums.YouTubePrivacy;
+    tags?: string[];
+    gameClassId?: number;
+    gameTitle?: string;
     metadata: any;
   }
 
@@ -6760,6 +6927,16 @@ declare namespace overwolf.social.youtube {
     name: string;
     picture: string;
     id: string;
+  }
+
+  interface SocialShareProgress extends Result {
+    progress: number;
+    id: string;
+    state: enums.ShareState;
+  }
+
+  interface SocialShareResult extends Result {
+    url: string;
   }
 
   /**
@@ -6807,6 +6984,12 @@ declare namespace overwolf.social.youtube {
     callback: CallbackFunction<Result>
   ): void;
 
+  function shareEx(
+    discordShareParams: overwolf.social.youtube.ShareParameters,
+    resultCallback: CallbackFunction<overwolf.social.youtube.SocialShareResult>,
+    progressCallback: CallbackFunction<overwolf.social.youtube.SocialShareProgress>
+  ): void;
+
   /**
    * Fired when the user's login state changes.
    */
@@ -6814,6 +6997,13 @@ declare namespace overwolf.social.youtube {
 }
 
 declare namespace overwolf.social.reddit {
+  namespace enums {
+    enum ShareState {
+      Started,
+      Uploading,
+      Finished
+    }
+  }
 
   interface Flair {
     id: string;
@@ -6830,6 +7020,8 @@ declare namespace overwolf.social.reddit {
     /**
      * The subreddit to which the file will be shared.
      */
+	  id?: string;
+	  useOverwolfNotifications: boolean;
     subreddit: string;
     /**
      * The shared video's title.
@@ -6869,14 +7061,27 @@ declare namespace overwolf.social.reddit {
     flair_id?: Flair;
   }
 
-  interface User {
-    subreddit: UserSubreddit;
-    name: string;
+  interface PostParameters {
+    /**
+     * The subreddit to which the post will be shared.
+     */
+    subreddit: string;
+    /**
+     * The shared post's title.
+     */
+    title: string;
+    /**
+     * The shared post's content.
+     */
+    content: string;
+    flair_id?: Flair;
   }
 
-  interface UserSubreddit {
-    icon_img: string;
-    display_name_prefixed: string;
+
+  interface User {
+    avatar: string;
+    displayName: string;
+    name: string;
   }
 
   interface Subreddit {
@@ -6902,6 +7107,16 @@ declare namespace overwolf.social.reddit {
   interface ShareFailedEvent {
     error: string;
     details?: string;
+  }
+
+  interface SocialShareProgress extends Result {
+    progress: number;
+    id: string;
+    state: enums.ShareState;
+  }
+
+  interface SocialShareResult extends Result {
+    url: string;
   }
 
   /**
@@ -6971,6 +7186,16 @@ declare namespace overwolf.social.reddit {
   function share(
     redditShareParams: ShareParameters,
     callback: CallbackFunction<Result>
+  ): void;
+
+  function shareEx(
+    discordShareParams: overwolf.social.reddit.ShareParameters,
+    resultCallback: CallbackFunction<overwolf.social.reddit.SocialShareResult>,
+	  progressCallback: CallbackFunction<overwolf.social.reddit.SocialShareProgress>
+  ): void;
+
+  function post(
+    redditShareParams: overwolf.social.reddit.PostParameters
   ): void;
 
   /**
