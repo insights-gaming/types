@@ -52,7 +52,7 @@ declare namespace overwolf.io {
       ASCII = "ASCII",
     }
 
-    const enum encoding {
+    enum encoding {
       Default = "Default",
       UTF8 = "UTF8",
       UTF32 = "UTF32",
@@ -6416,7 +6416,7 @@ declare namespace overwolf.settings.language {
 
 declare namespace overwolf.social {
   namespace enums {
-    const enum ShareState {
+    enum ShareState {
       Started,
       Uploading,
       Finished
@@ -6468,7 +6468,7 @@ declare namespace overwolf.social.discord {
       File,
     }
 
-    const enum ShareState {
+    enum ShareState {
       Started,
       Uploading,
       Finished
@@ -6632,7 +6632,7 @@ declare namespace overwolf.social.discord {
 
 declare namespace overwolf.social.gfycat {
   namespace enums {
-    const enum ShareState {
+    enum ShareState {
       Started,
       Uploading,
       Finished
@@ -6729,7 +6729,7 @@ declare namespace overwolf.social.gfycat {
 
 declare namespace overwolf.social.twitter {
   namespace enums {
-    const enum ShareState {
+    enum ShareState {
       Started,
       Uploading,
       Finished
