@@ -5299,29 +5299,29 @@ declare namespace overwolf.extensions.io {
     }
   }
 
-  interface GetStoragePathResult extends Result {
+  export interface GetStoragePathResult extends Result {
     path: string;
   }
 
-  interface Content {
+  export interface Content {
     type: enums.FileType;
     path: string;
   }
 
-  interface ReadTextFileResult extends Result {
+  export interface ReadTextFileResult extends Result {
     content: string;
   }
 
-  interface ExistResult extends Result {
+  export interface ExistResult extends Result {
     type: enums.FileType;
   }
 
-  interface DirResult extends Result {
+  export interface DirResult extends Result {
     files: string[];
     directories: string[];
   }
 
-  interface DeleteResult extends Result {
+  export interface DeleteResult extends Result {
     undeleted_content: Content[];
   }
 
