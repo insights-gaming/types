@@ -327,14 +327,6 @@ declare namespace overwolf.media {
       Video = "Video",
       Image = "Image",
     }
-
-    enum eSourceType {
-      Webcam = "Webcam"
-    }
-
-    enum eVideoSourceTransform {
-      Stretch = "Stretch"
-    }
   }
 
   interface RescaleParams {
@@ -393,7 +385,7 @@ declare namespace overwolf.media {
    * Get all connected Webcams.
    * @param callback A callback function which will be called with the status of the request.
    */
-  function GetWebcams(callback: CallbackFunction<GetWebcamsResult>): void;
+  function getWebcams(callback: CallbackFunction<GetWebcamsResult>): void;
 
   /**
    * Takes a screenshot and calls the callback with the success status and the
@@ -674,6 +666,23 @@ declare namespace overwolf.media.replays {
       Video = "Video",
       Gif = "Gif",
     }
+
+    enum eSourceType {
+      WebCam = 'WebCam',
+    }
+
+    enum eVideoSourceTransform {
+      DockBottomLeft = 'DockBottomLeft',
+      DockBottomMiddle = 'DockBottomMiddle',
+      DockBottomRight = 'DockBottomRight',
+      DockCenter = 'DockCenter',
+      DockMiddleLeft = 'DockMiddleLeft',
+      DockMiddleRight = 'DockMiddleRight',
+      DockTopLeft = 'DockTopLeft',
+      DockTopMiddle = 'DockTopMiddle',
+      DockTopRight = 'DockTopRight',
+      Stretch = 'Stretch',
+    }
   }
 
   interface WebCamParam {
@@ -684,10 +693,10 @@ declare namespace overwolf.media.replays {
    * Defines the video source settings.
    */
   interface VideoSource {
-    source_type: overwolf.media.enums.eSourceType;
+    source_type: overwolf.media.replays.enums.eSourceType;
     name: string;
     secondary_file: boolean; // Source will be saved to a secondary video file (i.e another ow-obs.exe process will be created with the same settings as the original one.
-    transform: overwolf.media.enums.eVideoSourceTransform;
+    transform: overwolf.media.replays.enums.eVideoSourceTransform;
     parameters: overwolf.media.replays.WebCamParam;
     position: { x: number, y: number }
     size_scale: { x: number, y: number }
