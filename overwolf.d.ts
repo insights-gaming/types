@@ -277,7 +277,7 @@ declare namespace overwolf.io {
    */
   function stopFileListener(id: string): void;
 
-  function WatchFile(
+  function watchFile(
     filePath: string,
     callback: CallbackFunction<WatchedFileChanged>
   ): void;
@@ -1137,6 +1137,10 @@ declare namespace overwolf.profile {
     username: string;
   }
 
+  interface GenerateUserSessionTokenResult extends Result {
+    token: string;
+  }
+
   /**
    * Calls the given callback with the currently logged-in Overwolf user.
    * @param callback A function called with the current user, or an error.
@@ -1156,6 +1160,10 @@ declare namespace overwolf.profile {
    */
   function refreshUserProfile(
     callback: CallbackFunction<GetCurrentUserResult>
+  ): void;
+
+  function generateUserSessionToken(
+    callback: CallbackFunction<GenerateUserSessionTokenResult>
   ): void;
 
   /**
@@ -1178,7 +1186,6 @@ declare namespace overwolf.profile.subscriptions.inapp {
   function show(
     planId: number,
     theme: string,
-    callback: CallbackFunction<Result>
   ): void;
 
   /**
@@ -2430,6 +2437,7 @@ declare namespace overwolf.games {
 
   interface RunningGameInfo {
     isInFocus: boolean;
+    gameIsInFocus: boolean;
     isRunning: boolean;
     allowsVideoCapture: boolean;
     title: string;
@@ -2488,6 +2496,7 @@ declare namespace overwolf.games {
 
   interface GetRunningGameInfoResult extends Result {
     isInFocus: boolean;
+    gameIsInFocus: boolean;
     isRunning: boolean;
     allowsVideoCapture: boolean;
     title: string;
@@ -2514,6 +2523,7 @@ declare namespace overwolf.games {
 
   interface GetRunningGameInfoResult2GameInfo {
     isInFocus: boolean;
+    gameIsInFocus: boolean;
     isRunning: boolean;
     allowsVideoCapture: boolean;
     title: string;
@@ -2894,7 +2904,7 @@ declare namespace overwolf.games.inputTracking {
   interface InputActivity {
     aTime: number;
     iTime: number;
-    apm: boolean;
+    apm: number;
     mouse: { total: number; dist: number; keys: any; };
     keyboard: { total: number; keys: any; };
   }
@@ -4178,6 +4188,12 @@ declare namespace overwolf.streaming {
     encoders?: EncoderData[];
   }
 
+  interface StreamingCapabilities extends Result {
+    video?: EncoderData[];
+    audio?: AudioDeviceData[];
+    audioProcessCaptureSupported?: boolean;
+  }
+
   interface GetAudioDevicesResult extends Result {
     devices?: AudioDeviceData[];
     default_recording_device_id?: string;
@@ -4385,6 +4401,10 @@ declare namespace overwolf.streaming {
    */
   function getAudioDevices(
     callback: CallbackFunction<GetAudioDevicesResult>
+  ): void;
+
+  function getCapabilities(
+    callback: CallbackFunction<StreamingCapabilities>
   ): void;
 
   /**
@@ -6364,24 +6384,34 @@ declare namespace overwolf.settings.hotkeys {
     virtualKey: number;
   }
 
+  interface UpdateHotkeyObject extends UnassignHotkeyObject {
+    customModifierKeyCode?: number;
+    isPassThrough?: boolean;
+  }
+
   /**
    * Returns the hotkey assigned for the current extension in all the games.
    */
   function get(callback: CallbackFunction<GetAssignedHotkeyResult>): void;
 
   /**
-  * Set hotkey for current extension
-  */
+   * Assign global hotkey for the current extension, OR, if a gameId is specified, assign/unassign a dedicated hotkey.
+   */
   function assign(
     hotkey: AssignHotkeyObject,
     callback: CallbackFunction<Result>
   ): void;
 
   /**
-  * unassign hotkey for current extension
-  */
+   * Unassign global hotkey for the current extension, OR, if a gameId is specified, assign/unassign a dedicated hotkey.
+   */
   function unassign(
     hotkey: UnassignHotkeyObject,
+    callback: CallbackFunction<Result>
+  ): void;
+
+  function update(
+    hotkey: UpdateHotkeyObject,
     callback: CallbackFunction<Result>
   ): void;
 
@@ -6464,9 +6494,9 @@ declare namespace overwolf.social {
    */
   function getDisabledServices(callback: CallbackFunction<GetDisabledServicesResult<void>>): void;
 
-  function uploadVideo(uploadParams: VideoUploadParams, resultCallback: CallbackFunction<VideoUploadResult>, progressCallback: CallbackFunction<VideoUploadProgress>)
+  function uploadVideo(uploadParams: VideoUploadParams, resultCallback: CallbackFunction<VideoUploadResult>, progressCallback: CallbackFunction<VideoUploadProgress>): void;
 
-  function cancelUpload(id: string, resultCallback: CallbackFunction<Result>)
+  function cancelUpload(id: string, resultCallback: CallbackFunction<Result>): void;
 }
 
 declare namespace overwolf.social.discord {
