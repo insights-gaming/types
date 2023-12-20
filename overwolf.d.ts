@@ -63,10 +63,10 @@ declare namespace overwolf.io {
     }
 
     enum WatchEventType {
-      Registered,
-      Changed,
-      Renamed,
-      Deleted
+      Registered = "Registered",
+      Changed = "Changged",
+      Renamed = "Renamed",
+      Deleted = "Deleted"
     }
   }
 
@@ -128,8 +128,8 @@ declare namespace overwolf.io {
   }
 
   interface ReadBinaryFileResult extends Result {
-    content?: string;
-    info?: FileInfo;
+    content: ArrayBuffer | null;
+    length: number;
   }
 
   interface ReadTextFileResult extends Result {
@@ -1043,7 +1043,7 @@ declare namespace overwolf.notifications {
   }
 
   interface ToastNotificationParams {
-    header: string;
+    header?: string;
     /**
      * Mandatory. Must include 1-3 texts (lines).
      */
@@ -1051,23 +1051,23 @@ declare namespace overwolf.notifications {
     /**
      * By default, your toast will display your app's logo. However, you can override this logo with your own image.
      */
-    logoOverride: LogoOverride;
+    logoOverride?: LogoOverride;
     /**
      * Toasts can display a hero image, which is displayed prominently within the toast banner and while inside Action Center. Image dimensions must be 364x180 pixels.
      */
-    heroImage: string;
+    heroImage?: string;
     /**
      * You can provide a full-width inline-image that appears when you expand the toast.
      */
-    inlineImage: string;
+    inlineImage?: string;
     /**
      * If you need to reference the source of your content, you can use attribution text. This text is always displayed at the bottom of your notification, along with your app's identity or the notification's timestamp.
      */
-    attribution: string;
+    attribution?: string;
     /**
      * Buttons make your toast interactive, letting the user take quick actions on your toast notification without interrupting their current workflow. Buttons appear in the expanded portion of your notification.
      */
-    buttons: ToastNotificationButton[];
+    buttons?: ToastNotificationButton[];
   }
 
   interface LogoOverride {
@@ -1129,6 +1129,7 @@ declare namespace overwolf.profile {
     installParams?: any;
     installerExtension?: any;
     displayName?: string;
+    uuid?: string;
   }
 
   interface LoginStateChangedEvent {
@@ -1165,6 +1166,11 @@ declare namespace overwolf.profile {
   function generateUserSessionToken(
     callback: CallbackFunction<GenerateUserSessionTokenResult>
   ): void;
+
+  function performOverwolfSessionLogin(
+    token: string,
+    callback: CallbackFunction<Result>
+  ): void
 
   /**
    * Fired when a user logged in or logged out.
@@ -1314,11 +1320,17 @@ declare namespace overwolf.windows {
     }
 
     enum WindowStateEx {
-      CLOSED = "closed",
-      MINIMIZED = "minimized",
-      HIDDEN = "hidden",
-      NORMAL = "normal",
-      MAXIMIZED = "maximized"
+      closed = "closed",
+      hidden = "hidden",
+      maximized = "maximized",
+      minimized = "minimized",
+      normal = "normal"
+    }
+
+    enum WindowType {
+      Desktop = "Desktop",
+      Background = "Background",
+      OffScreen = " OffScreen"
     }
   }
 
@@ -1494,6 +1506,16 @@ declare namespace overwolf.windows {
   function obtainDeclaredWindow(
     windowName: string,
     useDefaultSizeAndLocation: DefaultSizeAndLocation,
+    callback: CallbackFunction<WindowResult>
+  ): void;
+
+  /**
+   * Returns WindowResult object for a specific open window.
+   * @param windowName The name of the window that was declared in the data.windows section in the manifest
+   * @param callback Callback will be invoked with the WindowResult object.
+   */
+  function getWindow(
+    windowName: string,
     callback: CallbackFunction<WindowResult>
   ): void;
 
@@ -2871,8 +2893,6 @@ declare namespace overwolf.games.events {
    * information.
    */
   const onNewEvents: Event<NewGameEvents>;
-
-  const onNewEvent2: Event<GameEvent2>;
 }
 
 declare namespace overwolf.games.events.provider {
@@ -3935,6 +3955,12 @@ declare namespace overwolf.streaming {
      * Note: if game is minimized, BRB will be shown.
      */
     keep_game_capture_on_lost_focus?: boolean;
+
+
+    /**
+     * Disables automatic shutdown of the streaming API once the targeted game session ended.
+     */
+    disable_auto_shutdown_on_game_exit?: boolean;
   }
 
   /**
@@ -5138,6 +5164,10 @@ declare namespace overwolf.extensions {
 
   interface GetManifestResult extends Result, Manifest { }
 
+  interface GetPhasedPercentResult extends Result {
+    phasedPercent: number;
+  }
+
   interface GetInfoResult extends Result {
     info: string | { [key: string]: any };
   }
@@ -5437,6 +5467,30 @@ declare namespace overwolf.extensions.current {
    * @param callback A function called with the manifest data.
    */
   function getManifest(callback: CallbackFunction<GetManifestResult>): void;
+
+  function generateUserEmailHashes(email: string, callback: CallbackFunction<Result>): void;
+
+  function setUserEmailHashes(hashes: UserEmailHashes, callback: CallbackFunction<Result>): void;
+
+  interface UserEmailHashes {
+    SHA1: string;
+    SHA256: string;
+    MD5: string
+  }
+
+  function getPhasedPercent(
+    callback: CallbackFunction<GetPhasedPercentResult>,
+    version?: string,
+  ): void;
+
+  /**
+   * Repairs the schema registration, for an extension where the manifest contains
+   * url_protocol
+   * @param callback A function called with the manifest data.
+   */
+    function repairUrlProtocol(
+      callback: CallbackFunction<Result>
+    ): void;
 }
 
 declare namespace overwolf.extensions.sharedData {
@@ -5809,7 +5863,7 @@ declare namespace overwolf.utils {
     uptimeSeconds: number;
   }
 
-  interface UploadClientLogsOptions extends Result {
+  interface UploadClientLogsOptions {
     filePrefix: string;
   }
 
@@ -6347,6 +6401,13 @@ declare namespace overwolf.settings.hotkeys {
     binding: string;
   }
 
+  interface GetAllAssignedHotkeysResult extends Result {
+    apps: {
+      [appId: string]: Omit<GetAssignedHotkeyResult, 'success' | 'error'>;
+    },
+    platform: IHotkey[];
+  }
+
   interface GetAssignedHotkeyResult extends Result {
     globals: IHotkey[];
     games?: Record<string, IHotkey[]>;
@@ -6366,6 +6427,8 @@ declare namespace overwolf.settings.hotkeys {
     gameId: number;
     description: string;
     binding: string;
+    modifierKeys: number;
+    virtualKeycode: number;
   }
 
   interface HotkeyModifiers {
@@ -6393,6 +6456,11 @@ declare namespace overwolf.settings.hotkeys {
    * Returns the hotkey assigned for the current extension in all the games.
    */
   function get(callback: CallbackFunction<GetAssignedHotkeyResult>): void;
+
+  /**
+   * Returns the hotkeys assigned for all installed extensions + the platform, in all the games.
+   */
+  function getAllApps(callback: CallbackFunction<GetAllAssignedHotkeysResult>): void;
 
   /**
    * Assign global hotkey for the current extension, OR, if a gameId is specified, assign/unassign a dedicated hotkey.
@@ -6481,7 +6549,7 @@ declare namespace overwolf.social {
   }
 
   interface LoginStateChangedEvent {
-    status: "connected" | "disconnected";
+    state: "connected" | "disconnected";
   }
 
   interface GetDisabledServicesResult<T> extends Result {
@@ -6870,8 +6938,6 @@ declare namespace overwolf.social.youtube {
     }
   }
 
-
-
   interface ShareParameters {
     file: string;
     id?: string;
@@ -6883,7 +6949,7 @@ declare namespace overwolf.social.youtube {
     tags?: string[];
     gameClassId?: number;
     gameTitle?: string;
-    metadata: any;
+    metadata?: any;
   }
 
   interface User {
