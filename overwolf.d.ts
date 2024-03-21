@@ -4118,6 +4118,19 @@ declare namespace overwolf.streaming {
     filtered_capture: GameCaptureOptions;
   }
 
+  function getActiveRecordingApps(
+    callback: CallbackFunction<GetActiveRecordingAppsResult>
+  ): void;
+  
+  interface GetActiveRecordingAppsResult extends Result {
+    streaming: ActiveRecordingApps[];
+  }
+  
+  interface ActiveRecordingApps {
+    uid: string;
+    displayName: string;
+  }
+
   interface GameCaptureOptions {
     enable: boolean;
     additional_process_names: string[];
